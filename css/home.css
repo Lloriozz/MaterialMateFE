@@ -1,0 +1,183 @@
+Custom Colors
+:root {
+    --orange: #ff5733;
+    --blue: #4a7fd6;
+    --light-blue: #4a7fd6;
+    --yellow: #ffc107;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Text Colors */
+.text-orange {
+    color: var(--orange) !important;
+}
+
+/* Button Styles */
+.btn-orange {
+    background-color: var(--orange);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-orange:hover {
+    background-color: #e64a2e;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo Styling */
+.logo-img {
+    height: 40px;
+    width: auto;
+}
+
+/* Search Bar */
+.search-container {
+    position: relative;
+    width: 40%;
+    max-width: 500px;
+}
+
+.search-container .form-control {
+    border-radius: 20px;
+    padding-right: 40px;
+    height: 40px;
+}
+
+.search-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 0 20px 20px 0;
+    border: 1px solid #ced4da;
+    border-left: none;
+    background-color: white;
+    color: #6c757d;
+}
+
+/* User Profile */
+.user-profile {
+    font-size: 0.9rem;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.credit{
+    font-size: 10px;
+    background-color: white;
+
+}
+
+.credit-info {
+    position: absolute;
+    right: 120px;
+    top: 53px;
+    font-size: 0.8rem;
+    border: #6c757d 1px solid;
+    border-radius: 20px;
+}
+
+/* Hero Section */
+.hero {
+    min-height: calc(100vh - 70px); /* Full viewport height minus header height */
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Book Illustrations */
+.book-left {
+    left: 0;
+    bottom: 50px;
+    width: 400px;
+    z-index: -1;
+}
+
+.book-right {
+    right: 0;
+    top: -100px;
+    width: 400px;
+    z-index: -1;
+}
+
+.book-bottom-right {
+    right: 0;
+    top: 350px;
+    bottom: 0;
+    width: 400px;
+    z-index: -1;
+}
+
+.book-stack {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+/* Footer */
+footer {
+    background-color: var(--blue) !important;
+    width: 100%;
+    padding: 1rem 0;
+    z-index: 1000;
+}
+
+
+footer.footer-visible {
+    transform: translateY(0);
+}
+
+
+.social-icons a:hover {
+    opacity: 0.8;
+}
+
+/* Animation for CTA button */
+.pulse {
+    animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 51, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 87, 51, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 51, 0);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .search-container {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .book-left, .book-right, .book-bottom-right {
+        opacity: 0.3;
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .book-left, .book-right, .book-bottom-right {
+        width: 150px;
+    }
+    
+    .hero {
+        min-height: calc(100vh - 60px);
+    }
+}

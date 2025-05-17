@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaterialMate - Exchange Educational Materials</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+            <div class="container-fluid px-4">
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="../assets/Material_Mate-removebg-preview 3.png" alt="MaterialMate Logo" class="logo-img me-2">
+                    <span class="fw-bold fs-4">MaterialMate</span>
+                </a>
+                
+                <!-- Search Bar -->
+                <div class="search-container d-none d-md-block">
+                    <form class="d-flex">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn search-btn" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active text-orange fw-semibold" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" href="#">Bookshop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" href="#">Upload</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- User Profile -->
+                <div class="ms-3 d-flex align-items-center">
+                    <div class="user-profile rounded-pill border border-secondary d-flex align-items-center px-3 py-1">
+                        <span class="me-2">Long Nguyen Dinh</span>
+                        <div class="profile-icon rounded-circle bg-secondary d-flex justify-content-center align-items-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                    </div>
+                    <div class="credit-info px-1">
+                        <small class="credit">Credit: 01</small>
+                    </div>
+                </div>
+                
+                <!-- Mobile Toggle Button -->
+                <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container-fluid position-relative px-0">
+            <!-- Hero Section -->
+            <section class="hero d-flex flex-column justify-content-center align-items-center position-relative">
+                <!-- Left Book Illustration -->
+                <div class="book-left position-absolute">
+                    <img src="../assets/orange-removebg-preview 1.png" alt="Orange book illustration" class="img-fluid">
+                </div>
+                
+                <!-- Right Book Illustration -->
+                <div class="book-right position-absolute">
+                    <img src="../assets/blue-removebg-preview 1.png" alt="Blue book illustration" class="img-fluid">
+                </div>
+                
+                <!-- Bottom Right Book Illustration -->
+                <div class="book-bottom-right position-absolute">
+                    <img src="../assets/1db9842ca0c65007896fa3f3140a4d49-removebg-preview 1.png" alt="Yellow book illustration" class="img-fluid">
+                </div>
+                
+                <!-- Center Book Stack -->
+                <div class="book-stack text-center mb-4">
+                    <img src="../assets/Material_Mate-removebg-preview 3.png" alt="Stack of books" class="img-fluid">
+                </div>
+                
+                <!-- Welcome Text -->
+                <h1 class="display-5 fw-bold">Welcome to <span class="text-orange">MaterialMate!</span></h1>
+                <h2 class="fs-3 fw-normal mt-3">The best website for <span class="text-primary">exchanging materials</span></h2>
+                <p class="fs-5 fst-italic mt-3">"A material a day keeps a person awake"</p>
+                
+                <!-- CTA Button -->
+                <div class="mt-5">
+                    <a href="#" class="btn btn-orange btn-lg rounded-pill px-4 py-3 fw-semibold">Exchange now!</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-4">
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="fs-1 fw-bold">Material Mate</h2>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-phone-alt me-3"></i>
+                        <span>+84 43-036-79xx</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-envelope me-3"></i>
+                        <a href="mailto:mm.work@gmail.com" class="text-white text-decoration-none">mm.work@gmail.com</a>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-map-marker-alt me-3"></i>
+                        <span>International University</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="mb-3">Follow us</h4>
+                    <div class="social-icons">
+                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin fs-3"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-square fs-3"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fs-3"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fs-3"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="../js/home.js"></script>
+</body>
+</html>
