@@ -11,13 +11,9 @@
     <!-- Header -->
     <header>
         <div class="logo">
-            <svg width="40" height="40" viewBox="0 0 40 40">
-                <rect width="40" height="8" y="32" fill="#FF5733" rx="2" />
-                <rect width="40" height="8" y="22" fill="#FF8C33" rx="2" />
-                <rect width="40" height="8" y="12" fill="#33A1FF" rx="2" />
-                <rect width="40" height="8" y="2" fill="#3366FF" rx="2" />
-            </svg>
-            <span class="logo-text">MaterialMate</span>
+            <a href="#">
+                <img src="assets\menubar logo.png" alt="Material Mate Logo">
+            </a>
         </div>
         
         <div class="search-bar">
@@ -43,6 +39,14 @@
                 <span class="user-name">Truong Quoc Khanh</span>
                 <span class="user-credit">Credit: 01</span>
             </div>
+            <div class="dropdown-menu">
+                <div>
+                    <a href="PersonalInfo.html" class="dropdown-settings">Account Settings</a>
+                </div>
+                <div>
+                    <a href="#" class="dropdown-logout">Log out</a>
+                </div>
+            </div>
         </div>
     </header>
     
@@ -52,16 +56,22 @@
             <h1>ACCOUNT MANAGEMENT</h1>
             <ul class="sidebar-menu">
                 <li class="active">
-                    <i class="fas fa-info-circle"></i>
-                    <span>PERSONAL INFORMATION</span>
+                    <a href="PersonalInfo.html">
+                        <i class="fas fa-info-circle"></i>
+                        <span>PERSONAL INFORMATION</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fas fa-upload"></i>
-                    <span>UPLOADED MATERIALS</span>
+                    <a href="#">
+                        <i class="fas fa-upload"></i>
+                        <span>UPLOADED MATERIALS</span>
+                    </a>
                 </li>
                 <li>
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>EXCHANGED HISTORY</span>
+                    <a href="#">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>EXCHANGED HISTORY</span>
+                    </a>
                 </li>
             </ul>
         </aside>

@@ -105,6 +105,105 @@ nav ul li a {
     color: #666;
 }
 
+/* User dropdown menu */
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 180px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100;
+}
+
+.user-profile::after {
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 100%;
+    bottom: -15px;
+    left: 0;
+}
+
+.user-profile:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dropdown-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-credit {
+    color: #FF5733;
+    font-size: 14px;
+    border: 1px solid #FF5733;
+    border-radius: 20px;
+    padding: 3px 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.dropdown-settings {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 0;
+}
+
+.dropdown-settings:hover {
+    text-decoration: underline;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 8px 5px;
+    margin: 0 -5px;
+}
+
+.dropdown-logout {
+    color: red;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 0;
+}
+
+.dropdown-logout:hover {
+    text-decoration: underline;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 8px 5px;
+    margin: 0 -5px;
+}
+
 /* Main content styles */
 .container {
     display: flex;
@@ -115,7 +214,7 @@ nav ul li a {
 
 .sidebar {
     width: 250px;
-    padding: 20px;
+    /* padding: 5px; */
 }
 
 .sidebar h1 {
@@ -134,12 +233,22 @@ nav ul li a {
 }
 
 .sidebar-menu li i {
-    margin-right: 15px;
+    margin-right: 5px;
     width: 20px;
 }
 
 .sidebar-menu li.active {
     font-weight: bold;
+}
+
+.sidebar-menu li a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar-menu li.active a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .main-content {
