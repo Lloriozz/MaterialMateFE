@@ -1,0 +1,614 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.search-bar {
+    flex: 0 0 30%;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 8px 15px;
+    padding-right: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.search-bar button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 5px 15px;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.user-credit {
+    color: #666;
+}
+
+/* User dropdown menu */
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 180px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100;
+}
+
+.user-profile::after {
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 100%;
+    bottom: -15px;
+    left: 0;
+}
+
+.user-profile:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dropdown-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-credit {
+    color: #FF5733;
+    font-size: 14px;
+    border: 1px solid #FF5733;
+    border-radius: 20px;
+    padding: 3px 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.dropdown-settings {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 0;
+}
+
+.dropdown-settings:hover {
+    text-decoration: underline;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 8px 5px;
+    margin: 0 -5px;
+}
+
+.dropdown-logout {
+    color: red;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 0;
+}
+
+.dropdown-logout:hover {
+    text-decoration: underline;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 8px 5px;
+    margin: 0 -5px;
+}
+
+/* Main content styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 50px;
+    min-height: calc(100vh - 200px);
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    text-decoration: none;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.back-button i {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.book-details {
+    display: flex;
+    gap: 40px;
+}
+
+.book-cover {
+    width: 350px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.book-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.book-info {
+    flex: 1;
+}
+
+.book-title {
+    font-size: 32px;
+    color: #2a5db0;
+    margin-bottom: 30px;
+    line-height: 1.3;
+}
+
+.book-meta {
+    margin-bottom: 20px;
+}
+
+.book-meta-label {
+    font-weight: bold;
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.book-meta-value {
+    font-size: 18px;
+}
+
+.book-description {
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.exchange-button {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.exchange-button:hover {
+    background-color: #e5573f;
+}
+
+/* Modal Overlay Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content Styles */
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    text-align: center;
+    position: relative;
+    transform: scale(0.7);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+}
+
+.modal-content.show {
+    transform: scale(1);
+}
+
+/* Modal Close Button */
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Modal Icon Styles */
+.modal-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.modal-icon.books {
+    background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paper-JUKEKr1nAd1kPDTXHPzQoIWJ7kdEQA.png');
+}
+
+.modal-icon.error {
+    background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cancel%201-G7riTUpWzt2nSBGIstEBiIPHPLuHlv.png');
+}
+
+.modal-icon.success {
+    background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/checked-cmX7KKdIyl8IYdVhBkxu41MTnnmXTH.png');
+}
+
+/* Modal Text Styles */
+.modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+}
+
+.modal-text {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.modal-text.large {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-highlight {
+    color: #2a5db0;
+    font-weight: bold;
+}
+
+.modal-credit {
+    color: #ff6347;
+    font-weight: bold;
+}
+
+/* Button Styles */
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.modal-button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.modal-button.primary {
+    flex: 1;
+    background-color: #ff6347;
+    color: white;
+}
+
+.modal-button.primary:hover {
+    background-color: #e5573f;
+}
+
+.modal-button.secondary {
+    flex: 1;
+    background-color: transparent;
+    color: #2a5db0;
+    border: 2px solid #2a5db0;
+}
+
+.modal-button.secondary:hover {
+    background-color: #2a5db0;
+    color: white;
+}
+
+.modal-button.full-width {
+    width: 100%;
+    padding: 15px 20px;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 30px 20px;
+        margin: 20px;
+        width: calc(100% - 40px);
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+    }
+    
+    .modal-button {
+        width: 100%;
+    }
+    
+    .modal-title {
+        font-size: 20px;
+    }
+    
+    .modal-text {
+        font-size: 14px;
+    }
+    
+    .modal-text.large {
+        font-size: 16px;
+    }
+}
+
+/* Focus styles for accessibility */
+.modal-button:focus,
+.modal-close:focus {
+    outline: 2px solid #2a5db0;
+    outline-offset: 2px;
+}
+
+/* Footer styles */
+footer {
+    background-color: #2c5282;
+    color: white;
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-left {
+    display: flex;
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 50px;
+    margin-top: 20px;
+}
+
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-contact-item a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-right h3 {
+    margin-bottom: 15px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon i {
+    color: #2c5282;
+    font-size: 20px;
+}
+
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+    .book-details {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .book-cover {
+        width: 300px;
+    }
+
+    .book-info {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        padding: 15px 20px;
+    }
+
+    .search-bar {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    nav ul {
+        gap: 15px;
+    }
+
+    .container {
+        padding: 20px;
+        height: 100vh;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footer-right {
+        text-align: left;
+    }
+
+    .social-icons {
+        justify-content: flex-start;
+    }
+}

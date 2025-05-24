@@ -3,19 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaterialMate - Exchange Educational Materials</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+    <title>MaterialMate - Book Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/book-list.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/book-info.css">
     <!-- Header -->
     <header>
         <div class="logo">
-            <a href="#">
+            <a href="home.html">
                 <img src="../assets/menubar logo.png" alt="Material Mate Logo">
             </a>
         </div>
@@ -29,7 +23,7 @@
         
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="home.html">Home</a></li>
                 <li><a href="#">Bookshop</a></li>
                 <li><a href="#">Upload</a></li>
             </ul>
@@ -45,22 +39,50 @@
             </div>
             <div class="dropdown-menu">
                 <div>
-                    <a href="PersonalInfo.html" class="dropdown-settings">Account Settings</a>
+                    <a href="personal-info.html" class="dropdown-settings">Account Settings</a>
                 </div>
                 <div>
-                    <a href="#" class="dropdown-logout">Log out</a>
+                    <a href="login.html" class="dropdown-logout">Log out</a>
                 </div>
             </div>
         </div>
     </header>
-
-    <!-- Main Content - Book Grid -->
-    <main>
-        <div class="book-grid-container">
+    
+    <!-- Main Content -->
+    <div class="container">
+        <a href="#" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Bookshop
+        </a>
+        
+        <div class="book-details">
+            <div class="book-cover">
+                <img src="https://via.placeholder.com/350x450" alt="Book Cover">
+            </div>
             
+            <div class="book-info">
+                <h1 class="book-title">Giáo trình triết học maclenin và kinh tế chính trị và lịch sử đảng</h1>
+                
+                <div class="book-meta">
+                    <span class="book-meta-label">Uploader:</span>
+                    <span class="book-meta-value">User1205</span>
+                </div>
+                
+                <div class="book-meta">
+                    <span class="book-meta-label">Category:</span>
+                    <span class="book-meta-value">Tiếng việt, Triết học</span>
+                </div>
+                
+                <div class="book-meta">
+                    <span class="book-meta-label">Description:</span>
+                    <p class="book-description">Đây là description, mọi người đọc cái này để biết được cuốn sách nó về cái gì NHA!. Tôi viết thêm để trông cái description nó dài dài thôi chứ mấy dòng này vô nghĩa. Cảm ơn!</p>
+                </div>
+                
+                <button class="exchange-button">Exchange now</button>
+            </div>
         </div>
-    </main>
-
+    </div>
+    
     <!-- Footer -->
     <footer>
         <div class="footer-left">
@@ -103,9 +125,6 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script src="../js/book-list.js"></script>
+    <script src="../js/book-info.js"></script>
 </body>
 </html>
