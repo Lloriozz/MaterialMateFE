@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaterialMate - Account Management</title>
+    <link rel="stylesheet" href="../css/uploaded-materials.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="home.html">
+                <img src="../assets/menubar logo.png" alt="Material Mate Logo">
+            </a>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="#">Bookshop</a></li>
+                <li><a href="#">Upload</a></li>
+            </ul>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Truong Quoc Khanh</span>
+                <span class="user-credit">Credit: 01</span>
+            </div>
+            <div class="dropdown-menu">
+                <div>
+                    <a href="personal-info.html" class="dropdown-settings">Account Settings</a>
+                </div>
+                <div>
+                    <a href="#" class="dropdown-logout">Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h1>ACCOUNT MANAGEMENT</h1>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="personal-info.html">
+                            <i class="fas fa-info-circle"></i>
+                            <span>PERSONAL INFORMATION</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="uploaded-materials.html">
+                            <i class="fas fa-upload"></i>
+                            <span>UPLOADED MATERIALS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>EXCHANGED HISTORY</span>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Materials List -->
+            <section class="materials-list">
+                <div class="filter-bar">
+                    <button class="filter-btn">
+                        <i class="fas fa-filter"></i> Filter by
+                    </button>
+                </div>
+
+                <!-- Material Items -->
+                <div class="materials">
+                    <!-- Item 1 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">Web Application Development</h3>
+                            <p class="material-date">Uploaded Date: 16 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status pending">
+                            <span>Status: Pending</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">Data Structures and Algorithms</h3>
+                            <p class="material-date">Uploaded Date: 16 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status pending">
+                            <span>Status: Pending</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">General Law</h3>
+                            <p class="material-date">Uploaded Date: 15 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status approved">
+                            <span>Status: Approved</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">Computer Network</h3>
+                            <p class="material-date">Uploaded Date: 14 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status denied">
+                            <span>Status: Denied</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">Scientific Socialism</h3>
+                            <p class="material-date">Uploaded Date: 13 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status approved">
+                            <span>Status: Approved</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            <div class="footer-logo">MaterialMate</div>
+            
+            <div class="footer-contact">
+                <div class="footer-contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+84 43-036-79xx</span>
+                </div>
+                
+                <div class="footer-contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:mm.work@gmail.com">mm.work@gmail.com</a>
+                </div>
+                
+                <div class="footer-contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>International University</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-right">
+            <h3>Follow us</h3>
+            <div class="social-icons">
+                <div class="social-icon">
+                    <i class="fab fa-linkedin-in"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-twitter"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
