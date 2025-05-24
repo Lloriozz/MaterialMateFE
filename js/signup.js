@@ -202,24 +202,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     function handleFormSubmission(e) {
         e.preventDefault();
-        
-        // Hide any existing error message
-        hideErrorMessage();
-        
-        // Validate all fields
+
         const isUsernameValid = validateUsername();
         const isPasswordValid = validatePassword();
         const isConfirmPasswordValid = validateConfirmPassword();
         const isTermsValid = validateTerms();
-        
-        // Check if all validations pass
+
         if (isUsernameValid && isPasswordValid && isConfirmPasswordValid && isTermsValid) {
-            submitForm();
+            // All fields are valid, let the form submit
+            signupForm.submit();  // This will submit the form and navigate to profile-setup.html
         } else {
-            // Show general error message
             showErrorMessage('Please fix the errors above and try again.');
-            
-            // Focus on first invalid field
             const firstInvalidField = signupForm.querySelector('.is-invalid');
             if (firstInvalidField) {
                 firstInvalidField.focus();
@@ -227,27 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Submit form
-    function submitForm() {
-        const submitButton = signupForm.querySelector('.btn-signup');
-        const originalText = submitButton.textContent;
-        
-        // Show loading state
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Creating account...';
-        
-        // Simulate API call (replace with actual API call)
-        setTimeout(() => {
-            // Simulate success
-            showSuccessMessage();
-            
-            // Reset button after a delay
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
-            
-        }, 2000);
-    }
 
     // Show error message
     function showErrorMessage(message) {
