@@ -6,6 +6,7 @@
     <title>MaterialMate - Account Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/personal-info.css">
+    <script src="../js/personal-info.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -104,37 +105,37 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" value="Quoc Khanh" readonly>
+                    <input type="text" value="Quoc Khanh" readonly required>
                 </div>
                 
                 <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" value="Truong" readonly>
+                    <input type="text" value="Truong" readonly required>
                 </div>
                 
                 <div class="form-group">
                     <label>Student ID</label>
-                    <input type="text" value="ITCSIU23015" readonly>
+                    <input type="text" value="ITCSIU23015" readonly required>
                 </div>
                 
                 <div class="form-group">
                     <label>Phone Number</label>
-                    <input type="text" value="+84 38-485-xxxx" readonly>
+                    <input type="text" value="+84 38-485-xxxx" readonly required>
                 </div>
                 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" value="ITCSIU23015@student.hcmiu.edu.vn" readonly>
+                    <input type="email" value="ITCSIU23015@student.hcmiu.edu.vn" readonly required>
                 </div>
                 
                 <div class="form-group">
                     <label>Country</label>
-                    <input type="text" value="Vietnam" readonly>
+                    <input type="text" value="Vietnam" readonly required>
                 </div>
                 
                 <div class="form-group full-width">
                     <label>University</label>
-                    <input type="text" value="International University - VNUHCM" readonly>
+                    <input type="text" value="International University - VNUHCM" readonly required>
                 </div>
             </div>
             
@@ -143,155 +144,6 @@
                 <button class="save-button" id="saveButton">SAVE</button>
                 <button class="discard-button" id="discardButton">DISCARD</button>
             </div>
-            
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const editButton = document.getElementById('editButton');
-                    const saveButton = document.getElementById('saveButton');
-                    const discardButton = document.getElementById('discardButton');
-                    const inputFields = document.querySelectorAll('.form-group input');
-                    const editPictureBtn = document.getElementById('editPictureBtn');
-                    const profilePictureInput = document.getElementById('profilePictureInput');
-                    const profileImage = document.getElementById('profileImage');
-                    const profilePicture = document.getElementById('profilePicture');
-                    const successNotification = document.getElementById('successNotification');
-                    const notificationCloseBtn = document.getElementById('notificationCloseBtn');
-                    
-                    // Initially hide save and discard buttons
-                    saveButton.style.display = 'none';
-                    discardButton.style.display = 'none';
-                    
-                    // Store original values for discard functionality
-                    const originalValues = {};
-                    inputFields.forEach((input, index) => {
-                        originalValues[index] = input.value;
-                    });
-                    
-                    // Store original profile picture
-                    let originalProfilePicture = profileImage.src;
-                    let newProfilePicture = null;
-                    
-                    // Check if we need to use a default image
-                    if (!profileImage.complete || profileImage.naturalHeight === 0) {
-                        profileImage.src = '../assets/menubar logo.png';
-                        originalProfilePicture = profileImage.src;
-                    }
-                    
-                    // Notification close button event listener
-                    notificationCloseBtn.addEventListener('click', function() {
-                        successNotification.style.display = 'none';
-                    });
-                    
-                    // Also close notification when clicking outside the popup
-                    successNotification.addEventListener('click', function(event) {
-                        if (event.target === successNotification) {
-                            successNotification.style.display = 'none';
-                        }
-                    });
-                    
-                    // Profile picture edit button click handler
-                    editPictureBtn.addEventListener('click', function() {
-                        profilePictureInput.click();
-                    });
-                    
-                    // Handle file selection
-                    profilePictureInput.addEventListener('change', function(event) {
-                        if (event.target.files && event.target.files[0]) {
-                            const file = event.target.files[0];
-                            
-                            // Check if file is an image
-                            if (!file.type.match('image.*')) {
-                                alert('Please select an image file');
-                                return;
-                            }
-                            
-                            // Check file size (limit to 5MB)
-                            if (file.size > 5 * 1024 * 1024) {
-                                alert('Image size should be less than 5MB');
-                                return;
-                            }
-                            
-                            const reader = new FileReader();
-                            
-                            reader.onload = function(e) {
-                                // Display the image
-                                profileImage.src = e.target.result;
-                                profileImage.style.display = 'block';
-                                newProfilePicture = e.target.result;
-                                
-                                // If not in edit mode, automatically enter edit mode
-                                if (editButton.style.display !== 'none') {
-                                    editButton.click();
-                                }
-                            };
-                            
-                            reader.readAsDataURL(file);
-                        }
-                    });
-                    
-                    // Edit button click handler
-                    editButton.addEventListener('click', function() {
-                        // Make fields editable
-                        inputFields.forEach(input => {
-                            input.removeAttribute('readonly');
-                            input.style.backgroundColor = 'white';
-                        });
-                        
-                        // Show save and discard buttons, hide edit button
-                        editButton.style.display = 'none';
-                        saveButton.style.display = 'inline-block';
-                        discardButton.style.display = 'inline-block';
-                    });
-                    
-                    // Save button click handler
-                    saveButton.addEventListener('click', function() {
-                        // Make fields readonly again
-                        inputFields.forEach((input, index) => {
-                            input.setAttribute('readonly', true);
-                            input.style.backgroundColor = '#f9f9f9';
-                            // Update original values with new ones
-                            originalValues[index] = input.value;
-                        });
-                        
-                        // Save the new profile picture as the original
-                        if (newProfilePicture) {
-                            originalProfilePicture = newProfilePicture;
-                        }
-                        
-                        // Show edit button, hide save and discard buttons
-                        editButton.style.display = 'inline-block';
-                        saveButton.style.display = 'none';
-                        discardButton.style.display = 'none';
-                        
-                        // Show success notification
-                        document.getElementById('successNotification').style.display = 'flex';
-                    });
-                    
-                    // Discard button click handler
-                    discardButton.addEventListener('click', function() {
-                        // Restore original values and make fields readonly
-                        inputFields.forEach((input, index) => {
-                            input.value = originalValues[index];
-                            input.setAttribute('readonly', true);
-                            input.style.backgroundColor = '#f9f9f9';
-                        });
-                        
-                        // Restore original profile picture
-                        profileImage.src = originalProfilePicture;
-                        if (originalProfilePicture === '../assets/default-avatar.png' && !profileImage.style.display) {
-                            profileImage.style.display = 'none';
-                        } else {
-                            profileImage.style.display = 'block';
-                        }
-                        newProfilePicture = null;
-                        
-                        // Show edit button, hide save and discard buttons
-                        editButton.style.display = 'inline-block';
-                        saveButton.style.display = 'none';
-                        discardButton.style.display = 'none';
-                    });
-                });
-            </script>
         </main>
     </div>
     
