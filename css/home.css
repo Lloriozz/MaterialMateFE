@@ -1,4 +1,4 @@
-Custom Colors
+/* Custom Colors */
 :root {
     --orange: #ff5733;
     --blue: #2E59A7;
@@ -6,11 +6,15 @@ Custom Colors
     --yellow: #ffc107;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
 }
 
 /* Header styles */
@@ -21,6 +25,8 @@ header {
     padding: 15px 50px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
 }
 
 .logo {
@@ -75,13 +81,17 @@ nav ul li a {
     font-size: 16px;
 }
 
+/* User Profile Container */
 .user-profile {
+    position: relative;
     display: flex;
     align-items: center;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 50px;
     padding: 5px 15px;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .user-avatar {
@@ -109,12 +119,7 @@ nav ul li a {
     color: #666;
 }
 
-/* User dropdown menu */
-.user-profile {
-    position: relative;
-    cursor: pointer;
-}
-
+/* Dropdown Menu */
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
@@ -126,93 +131,71 @@ nav ul li a {
     padding: 15px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-    z-index: 100;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: 1px solid #e0e0e0;
+    pointer-events: none;
 }
 
-.user-profile::after {
-    content: '';
-    position: absolute;
-    height: 15px;
-    width: 100%;
-    bottom: -15px;
-    left: 0;
-}
-
+/* Hover trigger for dropdown */
 .user-profile:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-.dropdown-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+/* Create invisible bridge between profile and dropdown */
+.user-profile::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: transparent;
+    z-index: 999;
+    display: none;
 }
 
-.dropdown-name {
-    font-weight: bold;
-    font-size: 16px;
+.user-profile:hover::after {
+    display: block;
 }
 
-.dropdown-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dropdown-credit {
-    color: #FF5733;
+/* Dropdown Links */
+.dropdown-settings,
+.dropdown-logout {
+    display: block;
+    padding: 10px 5px;
+    text-decoration: none;
     font-size: 14px;
-    border: 1px solid #FF5733;
-    border-radius: 20px;
-    padding: 3px 10px;
-    display: inline-block;
-    margin-bottom: 15px;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    margin: 2px 0;
 }
 
 .dropdown-settings {
-    color: black;
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-    padding: 8px 0;
-}
-
-.dropdown-settings:hover {
-    text-decoration: underline;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    padding: 8px 5px;
-    margin: 0 -5px;
+    color: #333;
 }
 
 .dropdown-logout {
-    color: red;
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-    padding: 8px 0;
+    color: #dc3545;
 }
 
+.dropdown-settings:hover,
 .dropdown-logout:hover {
-    text-decoration: underline;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    padding: 8px 5px;
-    margin: 0 -5px;
+    background-color: #f8f9fa;
+    text-decoration: none;
+    transform: translateX(2px);
 }
 
-/* Hero Section */
+/* Hero Section */ 
 .hero {
-    min-height: calc(100vh - 70px); /* Full viewport height minus header height */
+    min-height: calc(100vh - 70px);
     padding: 0;
     overflow: hidden;
+    position: relative;
 }
 
 /* Book Illustrations */
@@ -243,6 +226,23 @@ nav ul li a {
     margin: 0 auto;
 }
 
+/* Bootstrap Custom Classes */
+.text-orange {
+    color: var(--orange) !important;
+}
+
+.btn-orange {
+    background-color: var(--orange);
+    border-color: var(--orange);
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: #e04e2a;
+    border-color: #e04e2a;
+    color: white;
+}
+
 /* Footer styles */
 footer {
     background-color: #2c5282;
@@ -250,6 +250,8 @@ footer {
     padding: 30px 50px;
     display: flex;
     justify-content: space-between;
+    position: relative;
+    z-index: 10;
 }
 
 .footer-left {
@@ -297,9 +299,58 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-2px);
 }
 
 .social-icon i {
     color: #2c5282;
     font-size: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        padding: 15px 20px;
+    }
+    
+    .search-bar {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    nav ul {
+        gap: 15px;
+    }
+    
+    .dropdown-menu {
+        right: -20px;
+        width: 200px;
+    }
+    
+    .book-left,
+    .book-right,
+    .book-bottom-right {
+        width: 250px;
+    }
+    
+    footer {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .footer-left {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-logo {
+        margin: 0 0 20px 0;
+    }
 }
