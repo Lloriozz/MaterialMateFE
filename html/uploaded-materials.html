@@ -6,6 +6,7 @@
     <title>MaterialMate - Account Management</title>
     <link rel="stylesheet" href="../css/uploaded-materials.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/uploaded-materials.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -81,9 +82,35 @@
             <!-- Materials List -->
             <section class="materials-list">
                 <div class="filter-bar">
-                    <button class="filter-btn">
-                        <i class="fas fa-filter"></i> Filter by
-                    </button>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn" id="filterBtn">
+                            <i class="fas fa-filter"></i> Filter by
+                        </button>
+                        <div class="filter-dropdown-content" id="filterDropdown">
+                            <div class="filter-section">
+                                <h4>Status</h4>
+                                <div class="filter-options">
+                                    <label><input type="checkbox" value="all" checked> All</label>
+                                    <label><input type="checkbox" value="pending"> Pending</label>
+                                    <label><input type="checkbox" value="approved"> Approved</label>
+                                    <label><input type="checkbox" value="denied"> Denied</label>
+                                </div>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Date</h4>
+                                <div class="filter-options">
+                                    <label><input type="radio" name="date-filter" value="all" checked> All time</label>
+                                    <label><input type="radio" name="date-filter" value="today"> Today</label>
+                                    <label><input type="radio" name="date-filter" value="week"> This week</label>
+                                    <label><input type="radio" name="date-filter" value="month"> This month</label>
+                                </div>
+                            </div>
+                            <div class="filter-actions">
+                                <button id="applyFilters">Apply</button>
+                                <button id="resetFilters">Reset</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Material Items -->
@@ -137,6 +164,18 @@
                     </div>
 
                     <!-- Item 5 -->
+                    <div class="material-item">
+                        <div class="material-thumbnail"></div>
+                        <div class="material-info">
+                            <h3 class="material-title">Scientific Socialism</h3>
+                            <p class="material-date">Uploaded Date: 13 - 05 - 2025</p>
+                        </div>
+                        <div class="material-status approved">
+                            <span>Status: Approved</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 6 -->
                     <div class="material-item">
                         <div class="material-thumbnail"></div>
                         <div class="material-info">

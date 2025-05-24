@@ -6,6 +6,7 @@
     <title>MaterialMate - Exchanged History</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/exchanged-history.css">
+    <script src="../js/exchanged-history.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -81,9 +82,27 @@
             <!-- Materials List -->
             <section class="materials-list">
                 <div class="filter-bar">
-                    <button class="filter-btn">
-                        <i class="fas fa-filter"></i> Filter by
-                    </button>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn" id="filterBtn">
+                            <i class="fas fa-filter"></i> Filter by
+                        </button>
+                        <div class="filter-dropdown-content" id="filterDropdown">
+                            <div class="filter-section">
+                                <h4>Exchanged Date</h4>
+                                <div class="filter-options">
+                                    <label><input type="radio" name="date-filter" value="all" checked> All time</label>
+                                    <label><input type="radio" name="date-filter" value="today"> Today</label>
+                                    <label><input type="radio" name="date-filter" value="week"> This week</label>
+                                    <label><input type="radio" name="date-filter" value="month"> This month</label>
+                                    <label><input type="radio" name="date-filter" value="year"> This year</label>
+                                </div>
+                            </div>
+                            <div class="filter-actions">
+                                <button id="applyFilters">Apply</button>
+                                <button id="resetFilters">Reset</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Material Items -->
