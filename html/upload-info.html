@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaterialMate - Upload Material</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/upload-info.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="home.html">
+                <img src="../assets/menubar logo.png" alt="Material Mate Logo">
+            </a>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="#">Bookshop</a></li>
+                <li><a href="#" class="active">Upload</a></li>
+            </ul>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Long Nguyen Dinh</span>
+                <span class="user-credit">Credit: 01</span>
+            </div>
+            <div class="dropdown-menu">
+                <div>
+                    <a href="personal-info.html" class="dropdown-settings">Account Settings</a>
+                </div>
+                <div>
+                    <a href="#" class="dropdown-logout">Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="upload-title">UPLOAD MATERIAL</h1>
+        
+        <div class="upload-form-container">
+            <form id="uploadForm">
+                <div class="form-layout">
+                    <!-- Left Column: File Preview and Buttons -->
+                    <div class="left-column">
+                        <!-- File Preview -->
+                        <div class="file-preview" id="filePreview">
+                            <span>File Preview</span>
+                        </div>
+                        
+                        <!-- File Actions (Buttons) -->
+                        <div class="file-actions">
+                            <button type="submit" class="btn-upload">Upload</button>
+                            <button type="button" class="btn-discard" onclick="discardUpload()">Discard</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Form Fields -->
+                    <div class="form-fields">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                                <option value="">Select a category</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="physics">Physics</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="biology">Biology</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="business">Business</option>
+                                <option value="economics">Economics</option>
+                                <option value="law">Law</option>
+                                <option value="literature">Literature</option>
+                                <option value="history">History</option>
+                                <option value="psychology">Psychology</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" placeholder="Provide a detailed description of your material..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="black" stroke-width="6"/>
+                    <path d="M30 50 L45 65 L70 35" fill="none" stroke="black" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2>Material uploaded successfully!</h2>
+            <p>Check your storage to view approving status</p>
+            <div class="modal-buttons">
+                <button class="btn-upload-another" onclick="uploadAnother()">Upload another Material</button>
+                <button class="btn-back-home" onclick="goToStorage()">Go to Storage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            <div class="footer-logo">Material Mate</div>
+            
+            <div class="footer-contact">
+                <div class="footer-contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+84 43-036-79xx</span>
+                </div>
+                
+                <div class="footer-contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:mm.work@gmail.com">mm.work@gmail.com</a>
+                </div>
+                
+                <div class="footer-contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>International University</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-right">
+            <h3>Follow us</h3>
+            <div class="social-icons">
+                <div class="social-icon">
+                    <i class="fab fa-linkedin-in"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-twitter"></i>
+                </div>
+                <div class="social-icon">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/upload-info.js"></script>
+</body>
+</html>
