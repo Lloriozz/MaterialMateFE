@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaterialMate - Log in</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Welcome Section -->
+        <div class="col-lg-6 welcome-section">
+            <!-- Scattered books -->
+            <div class="scattered-book scattered-book-1"></div>
+            <div class="scattered-book scattered-book-2"></div>
+            <div class="scattered-book scattered-book-3"></div>
+            <div class="scattered-book scattered-book-4"></div>
+
+            <div class="text-center">
+                <div class="books-illustration">
+                    <div class="books-stack">
+                        <div class="book book-1"></div>
+                        <div class="book book-2"></div>
+                        <div class="book book-3"></div>
+                        <div class="book book-4"></div>
+                    </div>
+                </div>
+
+                <h1 class="welcome-title">
+                    Welcome to <span class="brand-name">MaterialMate</span>!
+                </h1>
+                <p class="welcome-subtitle">
+                    The best website for <span class="fw-bold">exchanging materials</span>
+                </p>
+                <p class="welcome-quote">"A material a day keeps a person awake"</p>
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div class="col-lg-6 login-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-10 col-xl-8">
+                        <div class="text-center mb-4">
+                            <h2 class="login-title">Log in</h2>
+                            <p class="error-message">Incorrect username or password. Please try again.</p>
+                        </div>
+
+                        <form>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="username"
+                                    placeholder="Username, email or phone number"
+                                    required
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    placeholder="Password"
+                                    required
+                                />
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-login">Log in</button>
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <a href="#" class="forgot-password">Forgot password?</a>
+                            </div>
+
+                            <div class="divider">
+                                <span class="divider-text">or</span>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-create">Create an account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="footer-logo">Material Mate</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="footer-contact">
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>+84 43-036-79xx</span>
+                                </div>
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:mm.work@gmail.com">mm.work@gmail.com</a>
+                                </div>
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>International University</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-lg-end">
+                        <h3 class="h5 mb-3">Follow us</h3>
+                        <div class="social-icons justify-content-lg-end">
+                            <div class="social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </div>
+                            <div class="social-icon">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div class="social-icon">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="social-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
