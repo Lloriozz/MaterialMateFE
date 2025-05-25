@@ -6,15 +6,19 @@
     --yellow: #ffc107;
 }
 
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header styles */
@@ -25,8 +29,6 @@ header {
     padding: 15px 50px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1000;
 }
 
 .logo {
@@ -79,19 +81,26 @@ nav ul li a {
     color: black;
     font-weight: 500;
     font-size: 16px;
+    transition: color 0.3s;
 }
 
-/* User Profile Container */
+nav ul li a:hover {
+    color: #ff6b35;
+}
+
+nav ul li a.active {
+    color: #ff6b35;
+}
+
 .user-profile {
-    position: relative;
     display: flex;
     align-items: center;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 50px;
     padding: 5px 15px;
+    position: relative;
     cursor: pointer;
-    z-index: 100;
 }
 
 .user-avatar {
@@ -119,7 +128,6 @@ nav ul li a {
     color: #666;
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
@@ -131,63 +139,49 @@ nav ul li a {
     padding: 15px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
-    border: 1px solid #e0e0e0;
-    pointer-events: none;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100;
 }
 
-/* Hover trigger for dropdown */
-.user-profile:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-/* Create invisible bridge between profile and dropdown */
 .user-profile::after {
     content: '';
     position: absolute;
-    top: 100%;
+    height: 15px;
+    width: 100%;
+    bottom: -15px;
     left: 0;
-    right: 0;
-    height: 20px;
-    background: transparent;
-    z-index: 999;
-    display: none;
 }
 
-.user-profile:hover::after {
-    display: block;
+.user-profile:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Dropdown Links */
-.dropdown-settings,
-.dropdown-logout {
-    display: block;
-    padding: 10px 5px;
+.dropdown-settings, .dropdown-logout {
+    color: black;
     text-decoration: none;
     font-size: 14px;
-    border-radius: 5px;
-    transition: all 0.2s ease;
-    margin: 2px 0;
-}
-
-.dropdown-settings {
-    color: #333;
+    display: block;
+    padding: 8px 0;
 }
 
 .dropdown-logout {
-    color: #dc3545;
+    color: red;
 }
 
-.dropdown-settings:hover,
-.dropdown-logout:hover {
-    background-color: #f8f9fa;
-    text-decoration: none;
-    transform: translateX(2px);
+.dropdown-settings:hover, .dropdown-logout:hover {
+    text-decoration: underline;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 8px 5px;
+    margin: 0 -5px;
+}
+
+/* Main Container */
+.main-container {
+    width: 100%;
+    position: relative;
+    padding: 0;
 }
 
 /* Hero Section */ 
@@ -196,10 +190,15 @@ nav ul li a {
     padding: 0;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Book Illustrations */
 .book-left {
+    position: absolute;
     left: 0;
     bottom: 50px;
     width: 400px;
@@ -207,6 +206,7 @@ nav ul li a {
 }
 
 .book-right {
+    position: absolute;
     right: 0;
     top: -100px;
     width: 400px;
@@ -214,6 +214,7 @@ nav ul li a {
 }
 
 .book-bottom-right {
+    position: absolute;
     right: 0;
     top: 350px;
     bottom: 0;
@@ -224,17 +225,62 @@ nav ul li a {
 .book-stack {
     max-width: 200px;
     margin: 0 auto;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
-/* Bootstrap Custom Classes */
+.book-left img, .book-right img, .book-bottom-right img, .book-stack img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Welcome Text Styles */
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.welcome-subtitle {
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.welcome-quote {
+    font-size: 1.25rem;
+    font-style: italic;
+    margin-top: 1rem;
+    text-align: center;
+}
+
 .text-orange {
-    color: var(--orange) !important;
+    color: var(--orange);
+}
+
+.text-primary {
+    color: var(--blue);
+}
+
+/* CTA Button */
+.cta-container {
+    margin-top: 2.5rem;
+    text-align: center;
 }
 
 .btn-orange {
     background-color: var(--orange);
-    border-color: var(--orange);
+    border: 2px solid var(--orange);
     color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .btn-orange:hover {

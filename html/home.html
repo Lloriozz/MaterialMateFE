@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaterialMate - Exchange Educational Materials</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+    <title>MaterialMate - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
@@ -29,7 +25,7 @@
         
         <nav>
             <ul>
-                <li><a href="home.html">Home</a></li>
+                <li><a href="home.html" class="active">Home</a></li>
                 <li><a href="book-list.html">Bookshop</a></li>
                 <li><a href="upload-page.html">Upload</a></li>
             </ul>
@@ -40,7 +36,7 @@
                 <i class="fas fa-user"></i>
             </div>
             <div class="user-info">
-                <span class="user-name">Truong Quoc Khanh</span>
+                <span class="user-name">Quoc Khanh Truong</span>
                 <span class="user-credit">Credit: 01</span>
             </div>
             <div class="dropdown-menu">
@@ -56,37 +52,37 @@
 
     <!-- Main Content -->
     <main>
-        <div class="container-fluid position-relative px-0">
+        <div class="main-container">
             <!-- Hero Section -->
-            <section class="hero d-flex flex-column justify-content-center align-items-center position-relative">
+            <section class="hero">
                 <!-- Left Book Illustration -->
-                <div class="book-left position-absolute">
-                    <img src="../assets/orange-removebg-preview 1.png" alt="Orange book illustration" class="img-fluid">
+                <div class="book-left">
+                    <img src="../assets/orange-removebg-preview 1.png" alt="Orange book illustration">
                 </div>
                 
                 <!-- Right Book Illustration -->
-                <div class="book-right position-absolute">
-                    <img src="../assets/blue-removebg-preview 1.png" alt="Blue book illustration" class="img-fluid">
+                <div class="book-right">
+                    <img src="../assets/blue-removebg-preview 1.png" alt="Blue book illustration">
                 </div>
                 
                 <!-- Bottom Right Book Illustration -->
-                <div class="book-bottom-right position-absolute">
-                    <img src="../assets/1db9842ca0c65007896fa3f3140a4d49-removebg-preview 1.png" alt="Yellow book illustration" class="img-fluid">
+                <div class="book-bottom-right">
+                    <img src="../assets/1db9842ca0c65007896fa3f3140a4d49-removebg-preview 1.png" alt="Yellow book illustration">
                 </div>
                 
                 <!-- Center Book Stack -->
-                <div class="book-stack text-center mb-4">
-                    <img src="../assets/Material_Mate-removebg-preview 3.png" alt="Stack of books" class="img-fluid">
+                <div class="book-stack">
+                    <img src="../assets/Material_Mate-removebg-preview 3.png" alt="Stack of books">
                 </div>
                 
                 <!-- Welcome Text -->
-                <h1 class="display-5 fw-bold">Welcome to <span class="text-orange">MaterialMate!</span></h1>
-                <h2 class="fs-3 fw-normal mt-3">The best website for <span class="text-primary">exchanging materials</span></h2>
-                <p class="fs-5 fst-italic mt-3">"A material a day keeps a person awake"</p>
+                <h1 class="welcome-title">Welcome to <span class="text-orange">MaterialMate!</span></h1>
+                <h2 class="welcome-subtitle">The best website for <span class="text-primary">exchanging materials</span></h2>
+                <p class="welcome-quote">"A material a day keeps a person awake"</p>
                 
                 <!-- CTA Button -->
-                <div class="mt-5">
-                    <a href="book-list.html" class="btn btn-orange btn-lg rounded-pill px-4 py-3 fw-semibold">Exchange now!</a>
+                <div class="cta-container">
+                    <a href="book-list.html" class="btn-orange">Exchange now!</a>
                 </div>
             </section>
         </div>
@@ -134,8 +130,6 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="../js/home.js"></script>
 </body>
