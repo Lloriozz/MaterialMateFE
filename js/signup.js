@@ -1,3 +1,6 @@
+// API Base URL - Update this to match your Spring Boot server
+const API_BASE_URL = 'http://localhost:8080/mm'; // Change this to your actual server URL
+
 // Form validation and handling
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signupForm');
@@ -8,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Real-time validation on input
     usernameField.addEventListener('input', validateUsername);
-    usernameField.addEventListener('blur', validateUsername);
+    usernameField.addEventListener('blur', checkUsernameAvailability);
     passwordField.addEventListener('input', validatePassword);
     passwordField.addEventListener('blur', validatePassword);
     confirmPasswordField.addEventListener('input', validateConfirmPassword);
@@ -18,10 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission
     signupForm.addEventListener('submit', handleFormSubmission);
 
-    // Username validation
+    // Username validation (basic client-side validation)
     function validateUsername() {
         const username = usernameField.value.trim();
-        const feedback = usernameField.nextElementSibling;
         
         // Clear previous validation
         clearFieldValidation(usernameField);
@@ -46,21 +48,45 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // Check for reserved usernames
-        const reservedUsernames = ['admin', 'administrator', 'root', 'test', 'user', 'guest', 'materialmate'];
-        if (reservedUsernames.includes(username.toLowerCase())) {
-            showFieldError(usernameField, 'Username already exists. Please choose another one.');
-            return false;
-        }
-        
-        // Simulate checking username availability (you would replace this with actual API call)
-        if (username.toLowerCase() === 'johndoe' || username.toLowerCase() === 'testuser') {
-            showFieldError(usernameField, 'Username already exists. Please choose another one.');
-            return false;
-        }
-        
-        showFieldSuccess(usernameField);
         return true;
+    
+    }
+
+
+    async function checkUsernameAvailability() {
+        const username = usernameField.value.trim();
+        
+        clearFieldValidation(usernameField);
+        
+        if (!validateUsername()) {
+            return false;
+        }
+    
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/students/check-username?username=${encodeURIComponent(username)}`
+            );
+    
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+    
+            const exists = await response.json();
+            
+            if (exists) {
+                showFieldError(usernameField, 'Username already exists. Please choose another one.');
+                return false;
+            }
+            
+            showFieldSuccess(usernameField);
+            return true;
+    
+        } catch (error) {
+            console.error('Username check error:', error);
+            showFieldError(usernameField, 'Unable to verify username availability. Please try again.');
+            return false;
+        }
     }
 
     // Password validation
@@ -170,6 +196,87 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+
+    // Handle form submission
+    async function handleFormSubmission(e) {
+        e.preventDefault();
+
+        // Get form values
+        const username = usernameField.value.trim();
+        const password = passwordField.value;
+        const confirmPassword = confirmPasswordField.value;
+
+        // Validate all fields
+        const isUsernameValid = validateUsername();
+        const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
+        const isTermsValid = validateTerms();
+
+        if (!isUsernameValid || !isPasswordValid || !isConfirmPasswordValid || !isTermsValid) {
+            showErrorMessage('Please fix the errors above and try again.');
+            const firstInvalidField = signupForm.querySelector('.is-invalid');
+            if (firstInvalidField) {
+                firstInvalidField.focus();
+            }
+            return;
+        }
+
+        // Check username availability one more time before submission
+        const isUsernameAvailable = await checkUsernameAvailability();
+        if (!isUsernameAvailable) {
+            showErrorMessage('Username is not available. Please choose a different username.');
+            usernameField.focus();
+            return;
+        }
+
+        // Show loading state
+        const submitButton = signupForm.querySelector('.btn-signup');
+        const originalButtonText = submitButton.textContent;
+        submitButton.textContent = 'Creating Account...';
+        submitButton.disabled = true;
+
+        try {
+            const student = await createStudentAccount(username, password);
+            
+            // Show success message
+            showSuccessMessage('Account created successfully! Redirecting to login...');
+            
+            // Redirect to login page after short delay
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+            
+        } catch (error) {
+            // Handle specific error cases
+            if (error.message.toLowerCase().includes('username already exists')) {
+                showFieldError(usernameField, 'Username already exists. Please choose another one.');
+                showErrorMessage('Username already exists. Please choose a different username.');
+                usernameField.focus();
+            } else {
+                showErrorMessage(`Failed to create account: ${error.message}`);
+            }
+        
+        } finally {
+            // Reset button state
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        }
+    }
+
+    // CREATE STUDENT ACCOUNT
+    async function createStudentAccount(username, password) {
+        const response = await fetch(`${API_BASE_URL}/students`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+    }
+
     // Show field error
     function showFieldError(field, message) {
         field.classList.remove('is-valid');
@@ -199,28 +306,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle form submission
-    function handleFormSubmission(e) {
-        e.preventDefault();
-
-        const isUsernameValid = validateUsername();
-        const isPasswordValid = validatePassword();
-        const isConfirmPasswordValid = validateConfirmPassword();
-        const isTermsValid = validateTerms();
-
-        if (isUsernameValid && isPasswordValid && isConfirmPasswordValid && isTermsValid) {
-            // All fields are valid, let the form submit
-            signupForm.submit();  // This will submit the form and navigate to profile-setup.html
-        } else {
-            showErrorMessage('Please fix the errors above and try again.');
-            const firstInvalidField = signupForm.querySelector('.is-invalid');
-            if (firstInvalidField) {
-                firstInvalidField.focus();
-            }
-        }
-    }
-
-
     // Show error message
     function showErrorMessage(message) {
         hideErrorMessage(); // Remove existing message
@@ -232,8 +317,11 @@ document.addEventListener('DOMContentLoaded', function() {
             ${message}
         `;
         
-        const titleDiv = signupForm.closest('.col-md-8, .col-lg-10, .col-xl-8').querySelector('.text-center');
+        const titleDiv = signupForm.closest('.col-md-6, .col-lg-5, .col-xl-4').querySelector('.text-center');
         titleDiv.appendChild(errorDiv);
+        
+        // Auto-hide after 5 seconds
+        autoHideMessage(errorDiv);
     }
 
     // Hide error message
@@ -245,17 +333,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show success message
-    function showSuccessMessage() {
+    function showSuccessMessage(message) {
         hideErrorMessage(); // Remove any error messages
         
         const successDiv = document.createElement('div');
         successDiv.className = 'alert alert-success';
         successDiv.innerHTML = `
             <i class="fas fa-check-circle me-2"></i>
-            Account created successfully! Redirecting to login page...
+            ${message}
         `;
         
-        const titleDiv = signupForm.closest('.col-md-8, .col-lg-10, .col-xl-8').querySelector('.text-center');
+        const titleDiv = signupForm.closest('.col-md-6, .col-lg-5, .col-xl-4').querySelector('.text-center');
         titleDiv.appendChild(successDiv);
         
         // Hide the original error message
@@ -265,50 +353,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Password strength indicator (optional enhancement)
-    function updatePasswordStrength(password) {
-        let strength = 0;
-        const checks = [
-            password.length >= 8,
-            /[A-Z]/.test(password),
-            /[a-z]/.test(password),
-            /\d/.test(password),
-            /[!@#$%^&*(),.?":{}|<>]/.test(password),
-            password.length >= 12
-        ];
-        
-        strength = checks.filter(check => check).length;
-        
-        // You can add a visual strength indicator here
-        return strength;
-    }
-
-    // Terms links functionality
-    document.querySelectorAll('.terms-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const linkText = this.textContent;
-            
-            // You can replace this with actual modal or page navigation
-            alert(`${linkText} page would open here. In a real application, this would show the actual terms and policies.`);
-        });
-    });
-
-    // Social media links (if you add them later)
-    document.querySelectorAll('.social-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const iconClass = this.querySelector('i').className;
-            if (iconClass.includes('linkedin')) {
-                window.open('https://linkedin.com', '_blank');
-            } else if (iconClass.includes('facebook')) {
-                window.open('https://facebook.com', '_blank');
-            } else if (iconClass.includes('twitter')) {
-                window.open('https://twitter.com', '_blank');
-            } else if (iconClass.includes('instagram')) {
-                window.open('https://instagram.com', '_blank');
+    // Auto-hide error messages after a delay
+    function autoHideMessage(element, delay = 5000) {
+        setTimeout(() => {
+            if (element && element.parentNode) {
+                element.style.opacity = '0';
+                element.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.remove();
+                    }
+                }, 300);
             }
-        });
-    });
+        }, delay);
+    }
 
     // Prevent form submission on Enter key in input fields (optional)
     signupForm.querySelectorAll('input').forEach(input => {
@@ -332,20 +390,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return inputs[currentIndex + 1] || null;
     }
 
-    // Auto-hide error messages after a delay
-    function autoHideMessage(element, delay = 5000) {
-        setTimeout(() => {
-            if (element && element.parentNode) {
-                element.style.opacity = '0';
-                element.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => {
-                    if (element.parentNode) {
-                        element.remove();
-                    }
-                }, 300);
+    // Social media links functionality
+    document.querySelectorAll('.social-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const iconClass = this.querySelector('i').className;
+            if (iconClass.includes('linkedin')) {
+                window.open('https://linkedin.com', '_blank');
+            } else if (iconClass.includes('facebook')) {
+                window.open('https://facebook.com', '_blank');
+            } else if (iconClass.includes('twitter')) {
+                window.open('https://twitter.com', '_blank');
+            } else if (iconClass.includes('instagram')) {
+                window.open('https://instagram.com', '_blank');
             }
-        }, delay);
-    }
+        });
+    });
 });
 
 // Utility functions for other pages to use
@@ -370,3 +429,5 @@ window.MaterialMateValidation = {
         return password;
     }
 };
+
+
