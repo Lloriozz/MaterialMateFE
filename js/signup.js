@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // CREATE STUDENT ACCOUNT
     async function createStudentAccount(username, password) {
-        const response = await fetch(`${API_BASE_URL}/students`, {
+        const response = await fetch(`${API_BASE_URL}/students/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
