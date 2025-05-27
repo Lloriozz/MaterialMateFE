@@ -6,7 +6,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetFiltersBtn = document.getElementById('resetFilters');
     const statusCheckboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
     const dateRadios = document.querySelectorAll('input[name="date-filter"]');
-    const materialItems = document.querySelectorAll('.material-item');
+    
+    // Materials container
+    const materialsContainer = document.querySelector('.materials');
+    
+    // Try to get the user ID from sessionStorage or localStorage
+    let currentUserId = sessionStorage.getItem('currentUserId');
+    
+    // If not in sessionStorage, try localStorage as a backup
+    if (!currentUserId) {
+        currentUserId = localStorage.getItem('currentUserId');
+        if (currentUserId) {
+            console.log('User ID found in localStorage:', currentUserId);
+            // Copy to sessionStorage for consistency
+            sessionStorage.setItem('currentUserId', currentUserId);
+        }
+    } else {
+        console.log('User ID found in sessionStorage:', currentUserId);
+    }
+    
+    // If still no user ID, use a default
+    if (!currentUserId) {
+        currentUserId = '1'; // Default user ID for testing
+        console.log('No user ID found, using default:', currentUserId);
+    }
+    
+    // Clear any cached data before fetching
+    console.log('Fetching materials for user ID:', currentUserId);
+    
+    // Fetch materials from the API
+    fetchUserMaterials(currentUserId);
     
     // Toggle filter dropdown
     filterBtn.addEventListener('click', function() {
@@ -74,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Apply filters to material items
+        const materialItems = document.querySelectorAll('.material-item');
         materialItems.forEach(item => {
             // Status filtering
             const statusElement = item.querySelector('.material-status');
@@ -135,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Show all material items
+        const materialItems = document.querySelectorAll('.material-item');
         materialItems.forEach(item => {
             item.style.display = 'flex';
         });
@@ -171,4 +202,117 @@ document.addEventListener('DOMContentLoaded', function() {
         oneMonthAgo.setMonth(currentDate.getMonth() - 1);
         return date >= oneMonthAgo && date <= currentDate;
     }
+    
+    // Function to fetch user materials from the API
+    async function fetchUserMaterials(userId) {
+        try {
+            // Display loading message
+            displayLoadingMessage('Loading your materials...');
+            
+            // Add a timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            console.log(`Attempting to fetch from: http://localhost:8080/mm/items/student/${userId}?_=${timestamp}`);
+            
+            // Fetch materials from the API
+            let materials = [];
+            try {
+                const response = await fetch(`http://localhost:8080/mm/items/student/${userId}?_=${timestamp}`, {
+                    // Add cache control headers
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const responseText = await response.text();
+                console.log('Raw API response:', responseText);
+                
+                // Only try to parse as JSON if we have a non-empty response
+                if (responseText && responseText.trim() !== '') {
+                    try {
+                        materials = JSON.parse(responseText);
+                    } catch (parseError) {
+                        console.error('Error parsing JSON:', parseError);
+                        throw new Error('Invalid JSON response from server');
+                    }
+                }
+                
+                console.log('Processed materials from API:', materials);
+            } catch (apiError) {
+                console.error('API error:', apiError);
+                displayErrorMessage(`Error loading materials: ${apiError.message}. Please try again later.`);
+                return; // Exit the function early
+            }
+            
+            // Display the materials (either from API or fallback)
+            displayMaterials(materials);
+        } catch (error) {
+            console.error('Error in fetchUserMaterials:', error);
+            displayErrorMessage('Failed to load materials. Please try again later.');
+        }
+    }
+    
+    // Function to display materials in the UI
+    function displayMaterials(materials) {
+        const materialsContainer = document.querySelector('.materials');
+        
+        // Clear existing content
+        materialsContainer.innerHTML = '';
+        
+        if (!materials || materials.length === 0) {
+            materialsContainer.innerHTML = '<div class="no-materials">No materials found</div>';
+            return;
+        }
+        
+        // Create material items
+        materials.forEach(material => {
+            const materialItem = createMaterialItem(material);
+            materialsContainer.appendChild(materialItem);
+        });
+    }
+    
+    // Function to create a material item element
+    function createMaterialItem(material) {
+        const item = document.createElement('div');
+        item.className = 'material-item';
+        
+        // Format date (assuming material.uploadDate is in ISO format)
+        const uploadDate = material.uploadDate ? new Date(material.uploadDate) : new Date();
+        const formattedDate = `${uploadDate.getDate()} - ${uploadDate.getMonth() + 1} - ${uploadDate.getFullYear()}`;
+        
+        // Determine status class based on approvingStatus from API
+        const status = material.approvingStatus || 'Pending';
+        const statusClass = status.toLowerCase();
+        
+        item.innerHTML = `
+            <div class="material-thumbnail"></div>
+            <div class="material-info">
+                <h3 class="material-title">${material.title || 'Untitled Material'}</h3>
+                <p class="material-date">Uploaded Date: ${formattedDate}</p>
+            </div>
+            <div class="material-status ${statusClass}">
+                <span>Status: ${status}</span>
+            </div>
+        `;
+        
+        return item;
+    }
+    
+    // Function to display error message
+    function displayErrorMessage(message) {
+        const materialsContainer = document.querySelector('.materials');
+        materialsContainer.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+    
+    // Function to display loading message
+    function displayLoadingMessage(message) {
+        const materialsContainer = document.querySelector('.materials');
+        materialsContainer.innerHTML = `<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> ${message}</div>`;
+    }
 });
+
