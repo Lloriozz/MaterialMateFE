@@ -1,294 +1,286 @@
-// Profile setup form validation and handling
-document.addEventListener("DOMContentLoaded", () => {
-  const profileForm = document.getElementById("profileForm")
-  const fields = {
-    firstName: document.getElementById("firstName"),
-    lastName: document.getElementById("lastName"),
-    phoneNumber: document.getElementById("phoneNumber"),
-    email: document.getElementById("email"),
-    dateOfBirth: document.getElementById("dateOfBirth"),
-    country: document.getElementById("country"),
-    role: document.getElementById("role"),
-    school: document.getElementById("school"),
-  }
+// API Base URL - Update this to match your Spring Boot server
+const API_BASE_URL = 'http://localhost:8080/mm'; // Change this to your actual server URL
 
-  // Add event listeners for real-time validation
-  Object.keys(fields).forEach((fieldName) => {
-    const field = fields[fieldName]
-    if (field) {
-      field.addEventListener("input", () => validateField(fieldName))
-      field.addEventListener("blur", () => validateField(fieldName))
+document.addEventListener('DOMContentLoaded', function() {
+    const profileForm = document.getElementById('profileForm');
+    const submitButton = profileForm.querySelector('.btn-submit');
+
+    // Get the username from signup
+    const username = localStorage.getItem('mm_signup_username');
+    if (!username) {
+        // If no username found, redirect back to signup
+        window.location.href = 'signup.html';
+        return;
     }
-  })
 
-  // Form submission
-  profileForm.addEventListener("submit", handleFormSubmission)
+    // Get all form fields
+    const fields = {
+        firstName: document.getElementById('firstName'),
+        lastName: document.getElementById('lastName'),
+        phoneNumber: document.getElementById('phoneNumber'),
+        email: document.getElementById('email'),
+        dateOfBirth: document.getElementById('dateOfBirth'),
+        country: document.getElementById('country'),
+        role: document.getElementById('role'),
+        school: document.getElementById('school')
+    };
 
-  // Create success modal
-  function createSuccessModal() {
-    const modal = document.createElement("div")
-    modal.className = "modal-overlay"
-    modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        `
+    // Add real-time validation to all fields
+    Object.keys(fields).forEach(fieldName => {
+        const field = fields[fieldName];
+        if (field) {
+            // Add validation on input
+            field.addEventListener('input', () => {
+                validateField(fieldName, field.value.trim());
+            });
 
-    const modalContent = document.createElement("div")
-    modalContent.className = "modal-content"
-    modalContent.style.cssText = `
-            background: white;
-            border-radius: 12px;
-            padding: 40px 30px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-        `
+            // Add validation on blur (when field loses focus)
+            field.addEventListener('blur', () => {
+                validateField(fieldName, field.value.trim());
+            });
+        }
+    });
 
-    modalContent.innerHTML = `
-            <button class="modal-close" style="
-                position: absolute;
-                top: 15px;
-                right: 20px;
-                background: none;
-                border: none;
-                font-size: 24px;
-                color: #999;
-                cursor: pointer;
-                padding: 0;
-                width: 30px;
-                height: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">&times;</button>
-            
-            <div class="modal-icon" style="
-                width: 60px;
-                height: 60px;
-                background-color: #28a745;
-                border-radius: 50%;
-                margin: 0 auto 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 30px;
-            ">✓</div>
-            
-            <h2 style="
-                color: #000;
-                font-size: 28px;
-                font-weight: bold;
-                margin: 0 0 20px 0;
-                font-family: 'Arial', sans-serif;
-            ">Congratulations!!</h2>
-            
-            <p style="
-                color: #4a90e2;
-                font-size: 16px;
-                margin: 0 0 30px 0;
-                line-height: 1.4;
-            ">
-                Account created successfully.<br>
-                Please <span style="color: #ff6b35; font-weight: bold;">Log in</span> to continue.
-            </p>
-            
-            <button class="login-button" style="
-                background-color: #ff6b35;
-                color: white;
-                border: none;
-                border-radius: 25px;
-                padding: 12px 40px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                width: 100%;
-                transition: background-color 0.3s ease;
-            ">Login</button>
-        `
+    // Individual field validation
+    function validateField(fieldName, value) {
+        switch(fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!value) {
+                    showFieldError(fieldName, `${fieldName === 'firstName' ? 'First' : 'Last'} name is required`);
+                    return false;
+                }
+                if (value.length < 2) {
+                    showFieldError(fieldName, `${fieldName === 'firstName' ? 'First' : 'Last'} name must be at least 2 characters`);
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
 
-    // Add hover effect
-    const style = document.createElement("style")
-    style.textContent = `
-            .login-button:hover {
-                background-color: #e55a2b !important;
+            case 'phoneNumber':
+                if (!value) {
+                    showFieldError(fieldName, 'Phone number is required');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+
+            case 'email':
+                if (!value) {
+                    showFieldError(fieldName, 'Email is required');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+
+            case 'dateOfBirth':
+                if (!value) {
+                    showFieldError(fieldName, 'Date of birth is required');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+
+            case 'country':
+                if (!value) {
+                    showFieldError(fieldName, 'Country is required');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+
+            case 'role':
+                if (!value) {
+                    showFieldError(fieldName, 'Please select your role');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+
+            case 'school': // This is the HTML field ID for university
+                if (!value) {
+                    showFieldError(fieldName, 'School/University is required');
+                    return false;
+                }
+                showFieldSuccess(fieldName);
+                return true;
+        }
+    }
+
+    // Form validation and submission
+    profileForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Get form values
+        const formData = {
+            username: username, // Include the username from signup
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            phoneNumber: document.getElementById('phoneNumber').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            dateOfBirth: document.getElementById('dateOfBirth').value.trim(),
+            country: document.getElementById('country').value.trim(),
+            role: document.getElementById('role').value.trim(),
+            university: document.getElementById('school').value.trim() // Map school field to university
+        };
+
+        // Basic validation
+        if (!validateForm(formData)) {
+            return;
+        }
+
+        // Show loading state
+        submitButton.textContent = 'Updating Profile...';
+        submitButton.disabled = true;
+
+        try {
+            console.log('Sending profile data:', formData);
+            // Make API call to update profile
+            const response = await fetch(`${API_BASE_URL}/students/profile-setup`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(errorText || 'Failed to update profile');
             }
-            .modal-close:hover {
-                color: #333 !important;
-            }
-        `
-    document.head.appendChild(style)
 
-    modal.appendChild(modalContent)
+            // Clear the stored username as it's no longer needed
+            localStorage.removeItem('mm_signup_username');
 
-    // Add event listeners
-    const closeButton = modalContent.querySelector(".modal-close")
-    const loginButton = modalContent.querySelector(".login-button")
+            // Show success message
+            showSuccessMessage('Profile updated successfully! Redirecting to home...');
 
-    closeButton.addEventListener("click", () => {
-      document.body.removeChild(modal)
-    })
+            // Redirect to home after short delay
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 2000);
 
-    loginButton.addEventListener("click", () => {
-      document.body.removeChild(modal)
-      window.location.href = "login.html"
-    })
+        } catch (error) {
+            showErrorMessage(`Failed to update profile: ${error.message}`);
+        } finally {
+            // Reset button state
+            submitButton.textContent = 'Submit';
+            submitButton.disabled = false;
+        }
+    });
 
-    // Close modal when clicking outside
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal)
-      }
-    })
+    // Form validation function
+    function validateForm(data) {
+        let isValid = true;
 
-    return modal
-  }
+        // First Name validation
+        if (!data.firstName) {
+            showFieldError('firstName', 'First name is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('firstName');
+        }
 
-  // Show success modal
-  function showSuccessModal() {
-    const modal = createSuccessModal()
-    document.body.appendChild(modal)
-  }
+        // Last Name validation
+        if (!data.lastName) {
+            showFieldError('lastName', 'Last name is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('lastName');
+        }
 
-  // Validation functions for each field
-  const validators = {
-    firstName: (value) => {
-      if (!value.trim()) return "First name is required"
-      if (value.trim().length < 2) return "First name must be at least 2 characters"
-      if (!/^[a-zA-Z\s'-]+$/.test(value)) return "First name can only contain letters, spaces, hyphens, and apostrophes"
-      return null
-    },
+        // Phone validation
+        if (!data.phoneNumber) {
+            showFieldError('phoneNumber', 'Phone number is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('phoneNumber');
+        }
 
-    lastName: (value) => {
-      if (!value.trim()) return "Last name is required"
-      if (value.trim().length < 2) return "Last name must be at least 2 characters"
-      if (!/^[a-zA-Z\s'-]+$/.test(value)) return "Last name can only contain letters, spaces, hyphens, and apostrophes"
-      return null
-    },
+        // Email validation
+        if (!data.email) {
+            showFieldError('email', 'Email is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('email');
+        }
 
-    phoneNumber: (value) => {
-      if (!value.trim()) return "Phone number is required"
-      const cleanPhone = value.replace(/\D/g, "")
-      if (cleanPhone.length < 10) return "Phone number must be at least 10 digits"
-      return null
-    },
+        // Date of Birth validation
+        if (!data.dateOfBirth) {
+            showFieldError('dateOfBirth', 'Date of birth is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('dateOfBirth');
+        }
 
-    email: (value) => {
-      if (!value.trim()) return "Email is required"
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(value)) return "Please enter a valid email address"
-      return null
-    },
+        // Country validation
+        if (!data.country) {
+            showFieldError('country', 'Country is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('country');
+        }
 
-    dateOfBirth: (value) => {
-      if (!value) return "Date of birth is required"
-      const birthDate = new Date(value)
-      const today = new Date()
-      if (birthDate > today) return "Date of birth cannot be in the future"
-      return null
-    },
+        // Role validation
+        if (!data.role) {
+            showFieldError('role', 'Please select your role');
+            isValid = false;
+        } else {
+            showFieldSuccess('role');
+        }
 
-    country: (value) => {
-      if (!value.trim()) return "Country is required"
-      return null
-    },
+        // University validation (using school field in HTML)
+        if (!data.university) {
+            showFieldError('school', 'School/University is required');
+            isValid = false;
+        } else {
+            showFieldSuccess('school');
+        }
 
-    role: (value) => {
-      if (!value) return "Please select your role"
-      return null
-    },
-
-    school: (value) => {
-      if (!value.trim()) return "School/University is required"
-      return null
-    },
-  }
-
-  // Validate individual field
-  function validateField(fieldName) {
-    const field = fields[fieldName]
-    if (!field) return true
-
-    const value = field.value
-    const validator = validators[fieldName]
-
-    if (!validator) return true
-
-    const error = validator(value)
-
-    if (error) {
-      showFieldError(field, error)
-      return false
-    } else {
-      showFieldSuccess(field)
-      return true
+        return isValid;
     }
-  }
 
-  // Show field error
-  function showFieldError(field, message) {
-    field.classList.remove("is-valid")
-    field.classList.add("is-invalid")
-    const feedback = field.nextElementSibling
-    if (feedback && feedback.classList.contains("invalid-feedback")) {
-      feedback.textContent = message
+    // Utility functions for showing validation feedback
+    function showFieldError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
+        const feedback = field.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+            feedback.textContent = message;
+        }
     }
-  }
 
-  // Show field success
-  function showFieldSuccess(field) {
-    field.classList.remove("is-invalid")
-    field.classList.add("is-valid")
-    const feedback = field.nextElementSibling
-    if (feedback && feedback.classList.contains("invalid-feedback")) {
-      feedback.textContent = ""
+    function showFieldSuccess(fieldId) {
+        const field = document.getElementById(fieldId);
+        field.classList.remove('is-invalid');
+        field.classList.add('is-valid');
+        const feedback = field.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+            feedback.textContent = '';
+        }
     }
-  }
 
-  // Handle form submission
-  function handleFormSubmission(e) {
-    e.preventDefault()
-
-    // Validate all fields
-    let isFormValid = true
-    Object.keys(fields).forEach((fieldName) => {
-      if (!validateField(fieldName)) {
-        isFormValid = false
-      }
-    })
-
-    if (isFormValid) {
-      // Show loading state
-      const submitButton = profileForm.querySelector('button[type="submit"]')
-      const originalText = submitButton.textContent
-      submitButton.disabled = true
-      submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...'
-
-      // Simulate form submission
-      setTimeout(() => {
-        // Reset button
-        submitButton.disabled = false
-        submitButton.textContent = originalText
-
-        // Show success modal
-        showSuccessModal()
-      }, 1500)
-    } else {
-      // Focus on first invalid field
-      const firstInvalidField = profileForm.querySelector(".is-invalid")
-      if (firstInvalidField) {
-        firstInvalidField.focus()
-      }
+    function showErrorMessage(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger mt-3';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle me-2"></i>
+            ${message}
+        `;
+        profileForm.insertBefore(errorDiv, profileForm.firstChild);
+        setTimeout(() => errorDiv.remove(), 5000);
     }
-  }
-})
+
+    function showSuccessMessage(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'alert alert-success mt-3';
+        successDiv.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>
+            ${message}
+        `;
+        profileForm.insertBefore(successDiv, profileForm.firstChild);
+    }
+});

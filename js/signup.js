@@ -199,12 +199,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle form submission
     async function handleFormSubmission(e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission immediately
 
         // Get form values
         const username = usernameField.value.trim();
         const password = passwordField.value;
         const confirmPassword = confirmPasswordField.value;
+
+        console.log('Form submitted with username:', username);
 
         // Validate all fields
         const isUsernameValid = validateUsername();
@@ -213,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isTermsValid = validateTerms();
 
         if (!isUsernameValid || !isPasswordValid || !isConfirmPasswordValid || !isTermsValid) {
+            console.log('Form validation failed');
             showErrorMessage('Please fix the errors above and try again.');
             const firstInvalidField = signupForm.querySelector('.is-invalid');
             if (firstInvalidField) {
@@ -224,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check username availability one more time before submission
         const isUsernameAvailable = await checkUsernameAvailability();
         if (!isUsernameAvailable) {
+            console.log('Username not available');
             showErrorMessage('Username is not available. Please choose a different username.');
             usernameField.focus();
             return;
@@ -236,17 +240,27 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
 
         try {
+            console.log('Creating account...');
             const student = await createStudentAccount(username, password);
             
-            // Show success message
-            showSuccessMessage('Account created successfully! Redirecting to login...');
+            // Store username for profile setup
+            localStorage.setItem('mm_signup_username', username);
+            console.log('Username stored in localStorage:', username);
             
-            // Redirect to login page after short delay
+            // Show success message
+            showSuccessMessage('Account created successfully! Taking you to profile setup...');
+            
+            // Redirect to profile setup page using full path
+            console.log('Redirecting to profile setup...');
             setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
+                const baseUrl = window.location.origin;
+                const currentPath = window.location.pathname;
+                const profileSetupPath = currentPath.replace('signup.html', 'profile-setup.html');
+                window.location.href = baseUrl + profileSetupPath;
+            }, 1000);
             
         } catch (error) {
+            console.error('Error during signup:', error);
             // Handle specific error cases
             if (error.message.toLowerCase().includes('username already exists')) {
                 showFieldError(usernameField, 'Username already exists. Please choose another one.');
@@ -265,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // CREATE STUDENT ACCOUNT
     async function createStudentAccount(username, password) {
+        console.log('Attempting to create account for:', username);
         const response = await fetch(`${API_BASE_URL}/students/signup`, {
             method: 'POST',
             headers: {
@@ -275,6 +290,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 password: password
             })
         });
+
+        if (!response.ok) {
+            const error = await response.text();
+            console.error('Signup error:', error);
+            throw new Error(error);
+        }
+
+        const data = await response.json();
+        console.log('Account created successfully:', data);
+        return data;
     }
 
     // Show field error
