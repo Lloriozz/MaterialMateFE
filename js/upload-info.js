@@ -138,6 +138,61 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(errorMessage);
                 }
 
+                // *** Upload successful - Update credits ***
+                const usernameForCreditUpdate = sessionStorage.getItem('username'); // Lấy username từ storage
+                if (usernameForCreditUpdate) {
+                    const creditUpdateUrl = `http://localhost:8080/mm/students/${usernameForCreditUpdate}/credits`;
+                    console.log('Attempting to update credits for user:', usernameForCreditUpdate, 'at', creditUpdateUrl);
+                    
+                    fetch(creditUpdateUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ credits: 1 }), // Tăng credit lên 1
+                    })
+                    .then(creditResponse => {
+                        console.log('Credit update response status:', creditResponse.status);
+                        if (creditResponse.ok) {
+                            console.log('Credits updated successfully!');
+                            // Tùy chọn: Fetch lại thông tin user hoặc cập nhật UI ngay lập tức nếu cần
+                            // Gọi hàm updateCreditDisplay để cập nhật hiển thị credit trên trang hiện tại
+                            creditResponse.json().then(data => {
+                                if (data && data.totalCredits !== undefined) {
+                                    console.log('New total credits from update response:', data.totalCredits);
+                                    updateCreditDisplay(data.totalCredits);
+                                } else {
+                                    console.warn('New total credits not found in update response.', data);
+                                    // Nếu không có totalCredits trong response, fetch lại từ API user-info
+                                    const username = sessionStorage.getItem('username');
+                                     if (username) {
+                                         const creditApiUrl = `http://localhost:8080/mm/students/${username}/credits`;
+                                          console.log('Refetching credits after update...');
+                                          fetch(creditApiUrl)
+                                             .then(response => response.text())
+                                             .then(creditText => {
+                                                  const totalCredits = parseInt(creditText, 10);
+                                                   if (!isNaN(totalCredits)) {
+                                                        updateCreditDisplay(totalCredits);
+                                                    }
+                                             }).catch(err => console.error('Error refetching credits:', err));
+                                     }
+                                }
+                            }).catch(err => console.error('Error parsing credit update response JSON:', err));
+                        } else {
+                            console.error('Failed to update credits. Status:', creditResponse.status);
+                            // Log thêm response text nếu có lỗi
+                            creditResponse.text().then(text => console.error('Credit update response text:', text));
+                        }
+                    })
+                    .catch(creditError => {
+                        console.error('Error during credit update fetch:', creditError);
+                    });
+                } else {
+                    console.warn('Username not found in storage. Cannot update credits.');
+                }
+                // *** End credit update logic ***
+
                 // Clear session storage
                 sessionStorage.removeItem('uploadedFile');
                 sessionStorage.removeItem('fileName');
