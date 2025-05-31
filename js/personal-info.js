@@ -90,9 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'University':
                         input.value = profileData.university || '';
                         break;
-                    case 'Date of Birth':
-                        input.value = profileData.dateOfBirth || '';
-                        break;
                 }
             });
 
