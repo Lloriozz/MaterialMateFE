@@ -27,92 +27,224 @@ document.addEventListener('DOMContentLoaded', function () {
         loginButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Logging in...';
 
         try {
-            const response = await fetch('http://localhost:8080/mm/students/login', {
+            // First, attempt to login
+            const loginResponse = await fetch('http://localhost:8080/mm/students/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
 
-            // Try to parse the response as JSON to extract user ID
-            try {
-                const responseData = await response.clone().json();
-                console.log('Login response data:', responseData);
-                
-                // Check if the response contains user information
-                if (responseData) {
-                    // Look for ID in various possible locations in the response
-                    let userId = null;
-                    
-                    if (responseData.id) {
-                        userId = responseData.id;
-                    } else if (responseData.userId) {
-                        userId = responseData.userId;
-                    } else if (responseData.user && responseData.user.id) {
-                        userId = responseData.user.id;
-                    } else if (responseData.student && responseData.student.id) {
-                        userId = responseData.student.id;
-                    }
-                    
-                    // If we found a user ID, store it
-                    if (userId) {
-                        console.log('Found user ID in response:', userId);
-                        sessionStorage.setItem('currentUserId', userId);
-                        // Also store in localStorage as a backup
-                        localStorage.setItem('currentUserId', userId);
-                    } else {
-                        console.log('No user ID found in response');
-                    }
-                }
-            } catch (jsonError) {
-                // If response is not JSON, continue with text processing
-                console.log('Response is not JSON format:', jsonError);
-            }
+            // Clone the response for debugging
+            const responseForDebug = loginResponse.clone();
+            const debugText = await responseForDebug.text();
+            console.log('Raw login response:', debugText);
 
-            const message = await response.text();
-
-            if (response.ok) {
-                // First try to get the user ID from the login response
+            if (!loginResponse.ok) {
                 try {
-                    const responseData = JSON.parse(message);
-                    if (responseData && responseData.id) {
-                        // If the login response contains the ID, use it
-                        sessionStorage.setItem('currentUserId', responseData.id);
-                        localStorage.setItem('currentUserId', responseData.id);
-                        console.log(`Set user ID to ${responseData.id} from login response`);
-                        window.location.href = 'home.html';
-                        return;
+                    const errorJson = JSON.parse(debugText);
+                    const errorMessage = errorJson.message || errorJson.error || debugText;
+                    if (errorMessage.toLowerCase().includes('username') || 
+                        errorMessage.toLowerCase().includes('not found')) {
+                        showErrorMessage(errorMessage, usernameField);
+                    } else if (errorMessage.toLowerCase().includes('password')) {
+                        showErrorMessage(errorMessage, passwordField);
+                    } else {
+                        showErrorMessage(errorMessage, passwordField);
                     }
                 } catch (e) {
-                    // If parsing fails, continue with the next approach
-                    console.log('Login response is not JSON or does not contain ID');
-                }
-                
-                // If login response doesn't have the ID, fetch it from the database
-                fetchUserIdFromDatabase(username).then(userId => {
-                    // Store the user ID and redirect
-                    sessionStorage.setItem('currentUserId', userId);
-                    localStorage.setItem('currentUserId', userId);
-                    console.log(`Set user ID to ${userId} for username: ${username}`);
-                    window.location.href = 'home.html';
-                }).catch(error => {
-                    console.error('Error fetching user ID:', error);
-                    // If fetching fails, redirect anyway
-                    window.location.href = 'home.html';
-                });
-                
-                // Note: We don't redirect here because we're waiting for the async fetchUserIdFromDatabase to complete
-            } else {
-                if (message.toLowerCase().includes('username')) {
-                    showErrorMessage(message, usernameField);
-                } else {
-                    showErrorMessage(message, passwordField);
+                    // If not JSON, use the raw text
+                    if (debugText.toLowerCase().includes('username')) {
+                        showErrorMessage(debugText, usernameField);
+                    } else {
+                        showErrorMessage(debugText, passwordField);
+                    }
                 }
                 loginButton.disabled = false;
                 loginButton.innerHTML = 'Log in';
+                return;
             }
+
+            // Try to parse the login response
+            let loginData;
+            try {
+                loginData = JSON.parse(debugText);
+                console.log('Parsed login data:', loginData);
+            } catch (e) {
+                console.error('Failed to parse login response as JSON:', e);
+                // If not JSON, try to get the ID from the text response
+                loginData = { id: debugText.trim() };
+                console.log('Using raw response as ID:', loginData);
+            }
+
+            // Get user ID from the response
+            let userId = loginData.id;
+            
+            // If no direct ID, check other possible locations
+            if (!userId && loginData.student) {
+                userId = loginData.student.id;
+            }
+            if (!userId && loginData.user) {
+                userId = loginData.user.id;
+            }
+            
+            // If still no ID, check if the response itself is the ID
+            if (!userId && !isNaN(loginData)) {
+                userId = loginData;
+            }
+
+            if (!userId) {
+                console.error('No user ID found in response. Full response:', loginData);
+                throw new Error('Could not find user ID in login response');
+            }
+
+            console.log('Found user ID:', userId);
+
+            // Store user ID immediately after successful login
+            sessionStorage.setItem('currentUserId', userId);
+            localStorage.setItem('currentUserId', userId);
+
+            // If login successful, get user information
+            try {
+                // Get student ID first
+                const idResponse = await fetch(`http://localhost:8080/mm/students/id/${username}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!idResponse.ok) {
+                    throw new Error('Failed to fetch student ID');
+                }
+
+                const idData = await idResponse.json();
+                const studentId = idData.id;
+
+                // Store user ID immediately
+                sessionStorage.setItem('currentUserId', studentId);
+                localStorage.setItem('currentUserId', studentId);
+
+                // Get credits
+                const creditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                let credits = 0;
+                if (creditsResponse.ok) {
+                    credits = await creditsResponse.json();
+                }
+
+                // Since we don't have a GET profile endpoint, store basic info and let personal-info.js handle profile data
+                const userInfo = {
+                    id: studentId,
+                    username: username,
+                    credits: credits
+                };
+
+                // Store user information in session storage
+                sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'alert alert-success mt-3';
+                successMessage.innerHTML = `
+                    <h4>Welcome back, ${username}!</h4>
+                    <p>Student ID: ${studentId}</p>
+                    <p>Credits: ${credits}</p>
+                    <small>Redirecting to home page...</small>
+                `;
+                loginForm.appendChild(successMessage);
+
+                // Redirect to home page after showing the information
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error fetching user information:', error);
+                // Create retry button
+                const retryMessage = document.createElement('div');
+                retryMessage.className = 'alert alert-warning mt-3';
+                retryMessage.innerHTML = `
+                    <p>Failed to fetch your information. Click below to try again:</p>
+                    <button class="btn btn-warning btn-sm retry-fetch-btn">Retry</button>
+                `;
+                loginForm.appendChild(retryMessage);
+
+                // Add retry button functionality
+                const retryButton = retryMessage.querySelector('.retry-fetch-btn');
+                retryButton.addEventListener('click', async () => {
+                    retryButton.disabled = true;
+                    retryButton.innerHTML = 'Retrying...';
+                    try {
+                        // Retry getting student ID
+                        const retryIdResponse = await fetch(`http://localhost:8080/mm/students/id/${username}`, {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        if (!retryIdResponse.ok) {
+                            throw new Error('Failed to fetch student ID on retry');
+                        }
+
+                        const retryIdData = await retryIdResponse.json();
+                        const studentId = retryIdData.id;
+
+                        // Store user ID
+                        sessionStorage.setItem('currentUserId', studentId);
+                        localStorage.setItem('currentUserId', studentId);
+
+                        // Try to get credits
+                        const retryCreditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        let credits = 0;
+                        if (retryCreditsResponse.ok) {
+                            credits = await retryCreditsResponse.json();
+                        }
+
+                        // Store basic user info
+                        const userInfo = {
+                            id: studentId,
+                            username: username,
+                            credits: credits
+                        };
+                        sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+
+                        // Show success and redirect
+                        retryMessage.className = 'alert alert-success mt-3';
+                        retryMessage.innerHTML = 'Information fetched successfully! Redirecting...';
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 1000);
+                    } catch (retryError) {
+                        console.error('Retry failed:', retryError);
+                        retryButton.disabled = false;
+                        retryButton.innerHTML = 'Retry';
+                        retryMessage.className = 'alert alert-danger mt-3';
+                        retryMessage.innerHTML = `
+                            <p>Failed to fetch information. Please try:</p>
+                            <button class="btn btn-warning btn-sm retry-fetch-btn">Retry</button>
+                            <p class="mt-2">Or <a href="home.html">continue to home page</a> and update your profile later.</p>
+                        `;
+                    }
+                });
+
+                // Also provide a link to continue without profile
+                const skipLink = document.createElement('div');
+                skipLink.className = 'text-center mt-2';
+                skipLink.innerHTML = '<a href="home.html">Continue to home page</a>';
+                loginForm.appendChild(skipLink);
+            }
+
         } catch (error) {
             console.error('Login error:', error);
-            showErrorMessage('An unexpected error occurred. Please try again later.', passwordField);
+            if (error.message.includes('Failed to fetch') || !navigator.onLine) {
+                showErrorMessage('Unable to connect to the server. Please check your internet connection and try again.', passwordField);
+            } else {
+                showErrorMessage(error.message || 'An unexpected error occurred. Please try again later.', passwordField);
+            }
             loginButton.disabled = false;
             loginButton.innerHTML = 'Log in';
         }

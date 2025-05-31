@@ -37,8 +37,8 @@
                 <i class="fas fa-user"></i>
             </div>
             <div class="user-info">
-                <span class="user-name">Truong Quoc Khanh</span>
-                <span class="user-credit">Credit: 01</span>
+                <span class="user-name" id="headerUserName"></span>
+                <span class="user-credit" id="headerUserCredit">Credit: 0</span>
             </div>
             <div class="dropdown-menu">
                 <div>
@@ -57,8 +57,8 @@
             <div class="notification-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h3 class="notification-title">Profile updated successsfully!</h3>
-            <button class="notification-button" id="notificationCloseBtn">Cancel</button>
+            <h3 class="notification-title">Profile updated successfully!</h3>
+            <button class="notification-button" id="notificationCloseBtn">Close</button>
         </div>
     </div>
     
@@ -99,43 +99,53 @@
                     </button>
                     <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
                 </div>
-                <h2 class="profile-name">Truong Quoc Khanh</h2>
+                <h2 class="profile-name"></h2>
             </div>
             
             <div class="form-grid">
                 <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" value="Quoc Khanh" readonly required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" value="Truong" readonly required>
-                </div>
-                
-                <div class="form-group">
                     <label>Student ID</label>
-                    <input type="text" value="ITCSIU23015" readonly required>
+                    <input type="text" readonly required>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" readonly required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="text" value="+84 38-485-xxxx" readonly required>
+                    <label>First Name <span class="required">*</span></label>
+                    <input type="text" placeholder="First Name" readonly required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" value="ITCSIU23015@student.hcmiu.edu.vn" readonly required>
+                    <label>Last Name <span class="required">*</span></label>
+                    <input type="text" placeholder="Last Name" readonly required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Country</label>
-                    <input type="text" value="Vietnam" readonly required>
+                    <label>Phone Number <span class="required">*</span></label>
+                    <input type="text" placeholder="Phone Number" readonly required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" placeholder="Email" readonly required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date of Birth <span class="required">*</span></label>
+                    <input type="date" placeholder="Date of Birth" readonly required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Country <span class="required">*</span></label>
+                    <input type="text" placeholder="Country" readonly required>
                 </div>
                 
                 <div class="form-group full-width">
-                    <label>University</label>
-                    <input type="text" value="International University - VNUHCM" readonly required>
+                    <label>University <span class="required">*</span></label>
+                    <input type="text" placeholder="University" readonly required>
                 </div>
             </div>
             
@@ -188,7 +198,5 @@
             </div>
         </div>
     </footer>
-    
-    <script src="../js/user-info.js"></script>
 </body>
 </html>

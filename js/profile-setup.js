@@ -151,15 +151,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(errorText || 'Failed to update profile');
             }
 
+            // Get the response data
+            const updatedProfile = await response.json();
+
+            // Store the complete profile data in session storage
+            const userInfo = {
+                username: username,
+                ...updatedProfile
+            };
+            sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+
             // Clear the stored username as it's no longer needed
             localStorage.removeItem('mm_signup_username');
 
             // Show success message
-            showSuccessMessage('Profile updated successfully! Redirecting to home...');
+            showSuccessMessage('Profile updated successfully! Redirecting to login...');
 
-            // Redirect to home after short delay
+            // Redirect to login page after short delay
             setTimeout(() => {
-                window.location.href = 'home.html';
+                window.location.href = 'login.html';
             }, 2000);
 
         } catch (error) {
