@@ -33,79 +33,89 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({ username, password })
             });
 
-            // Try to parse the response as JSON to extract user ID
-            try {
-                const responseData = await response.clone().json();
-                console.log('Login response data:', responseData);
-                
-                // Check if the response contains user information
-                if (responseData) {
-                    // Look for ID in various possible locations in the response
-                    let userId = null;
-                    
-                    if (responseData.id) {
-                        userId = responseData.id;
-                    } else if (responseData.userId) {
-                        userId = responseData.userId;
-                    } else if (responseData.user && responseData.user.id) {
-                        userId = responseData.user.id;
-                    } else if (responseData.student && responseData.student.id) {
-                        userId = responseData.student.id;
-                    }
-                    
-                    // If we found a user ID, store it
-                    if (userId) {
-                        console.log('Found user ID in response:', userId);
-                        sessionStorage.setItem('currentUserId', userId);
-                        // Also store in localStorage as a backup
-                        localStorage.setItem('currentUserId', userId);
-                    } else {
-                        console.log('No user ID found in response');
-                    }
-                }
-            } catch (jsonError) {
-                // If response is not JSON, continue with text processing
-                console.log('Response is not JSON format:', jsonError);
-            }
-
             const message = await response.text();
 
             if (response.ok) {
-                // First try to get the user ID from the login response
+                // Lấy username từ trường nhập liệu trước khi xử lý response
+                const username = usernameField.value.trim();
+
+                // Cố gắng lấy user ID từ response JSON
+                let userId = null;
                 try {
                     const responseData = JSON.parse(message);
                     if (responseData && responseData.id) {
-                        // If the login response contains the ID, use it
-                        sessionStorage.setItem('currentUserId', responseData.id);
-                        localStorage.setItem('currentUserId', responseData.id);
-                        console.log(`Set user ID to ${responseData.id} from login response`);
-                        window.location.href = 'home.html';
-                        return;
+                        userId = responseData.id;
+                        console.log(`User ID ${userId} found in login response JSON.`);
+                    } else {
+                        console.log('Login response JSON does not contain ID.');
                     }
                 } catch (e) {
-                    // If parsing fails, continue with the next approach
-                    console.log('Login response is not JSON or does not contain ID');
+                    console.log('Could not parse login response as JSON or it is empty:', e);
                 }
-                
-                // If login response doesn't have the ID, fetch it from the database
-                fetchUserIdFromDatabase(username).then(userId => {
-                    // Store the user ID and redirect
+
+                // Lưu username vào storage ngay lập tức
+                if (username) {
+                     sessionStorage.setItem('username', username);
+                     localStorage.setItem('username', username);
+                     console.log(`Username '${username}' stored in storage.`);
+                }
+
+                // Nếu chưa có userId từ response JSON, thử fetch từ database
+                if (!userId) {
+                    console.log(`Fetching user ID for username: ${username} from database.`);
+                    fetchUserIdFromDatabase(username).then(fetchedUserId => {
+                        if (fetchedUserId && fetchedUserId !== '1') { // '1' là giá trị mặc định khi lỗi
+                            userId = fetchedUserId;
+                            console.log(`Fetched user ID ${userId} from database.`);
+                        } else {
+                             console.warn(`Could not fetch valid user ID for username: ${username}. Using default ID '1'.`);
+                             userId = '1'; // Vẫn set một ID mặc định
+                        }
+                        
+                        // Lưu userId vào storage sau khi có được
+                        sessionStorage.setItem('currentUserId', userId);
+                        localStorage.setItem('currentUserId', userId);
+                        console.log(`User ID '${userId}' stored in storage.`);
+
+                        // Thêm độ trễ nhỏ trước khi chuyển hướng
+                        setTimeout(() => {
+                            console.log('Redirecting to home.html after fetch...');
+                            window.location.href = 'home.html';
+                        }, 100); // Độ trễ 100ms
+
+                    }).catch(error => {
+                        console.error('Error fetching user ID from database:', error);
+                        // Nếu fetch lỗi, vẫn lưu username (đã lưu trước đó) và chuyển hướng
+                        // Có thể cân nhắc xử lý lỗi nặng hơn ở đây nếu cần
+                        // Lưu userId mặc định nếu fetch lỗi
+                        sessionStorage.setItem('currentUserId', '1');
+                        localStorage.setItem('currentUserId', '1');
+                         console.warn(`Failed to fetch user ID. Stored default ID '1'.`);
+                         // Thêm độ trễ nhỏ trước khi chuyển hướng ngay cả khi fetch lỗi
+                         setTimeout(() => {
+                            console.log('Redirecting to home.html after fetch error...');
+                            window.location.href = 'home.html';
+                        }, 100); // Độ trễ 100ms
+                    });
+                } else {
+                    // Nếu đã có userId từ response JSON, lưu userId và chuyển hướng ngay
                     sessionStorage.setItem('currentUserId', userId);
                     localStorage.setItem('currentUserId', userId);
-                    console.log(`Set user ID to ${userId} for username: ${username}`);
-                    window.location.href = 'home.html';
-                }).catch(error => {
-                    console.error('Error fetching user ID:', error);
-                    // If fetching fails, redirect anyway
-                    window.location.href = 'home.html';
-                });
-                
-                // Note: We don't redirect here because we're waiting for the async fetchUserIdFromDatabase to complete
+                     console.log(`User ID '${userId}' stored from login response.`);
+                     // Thêm độ trễ nhỏ trước khi chuyển hướng
+                     setTimeout(() => {
+                         console.log('Redirecting to home.html after successful login...');
+                         window.location.href = 'home.html';
+                     }, 100); // Độ trễ 100ms
+                }
+
             } else {
-                if (message.toLowerCase().includes('username')) {
-                    showErrorMessage(message, usernameField);
+                // Xử lý lỗi đăng nhập (response.ok là false)
+                const finalMessage = message && message.trim() !== '' ? message : 'Login failed. Please check your credentials and try again.';
+                if (finalMessage.toLowerCase().includes('username') || finalMessage.toLowerCase().includes('not existed')) {
+                    showErrorMessage(finalMessage, usernameField);
                 } else {
-                    showErrorMessage(message, passwordField);
+                    showErrorMessage(finalMessage, passwordField);
                 }
                 loginButton.disabled = false;
                 loginButton.innerHTML = 'Log in';
