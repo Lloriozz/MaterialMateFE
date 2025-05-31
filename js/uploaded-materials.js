@@ -10,32 +10,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Materials container
     const materialsContainer = document.querySelector('.materials');
     
-    // Try to get the user ID from sessionStorage or localStorage
-    let currentUserId = sessionStorage.getItem('currentUserId');
+    // Try to get the username from sessionStorage or localStorage
+    let currentUsername = sessionStorage.getItem('currentUsername');
     
     // If not in sessionStorage, try localStorage as a backup
-    if (!currentUserId) {
-        currentUserId = localStorage.getItem('currentUserId');
-        if (currentUserId) {
-            console.log('User ID found in localStorage:', currentUserId);
+    if (!currentUsername) {
+        currentUsername = localStorage.getItem('currentUsername');
+        if (currentUsername) {
+            console.log('Username found in localStorage:', currentUsername);
             // Copy to sessionStorage for consistency
-            sessionStorage.setItem('currentUserId', currentUserId);
+            sessionStorage.setItem('currentUsername', currentUsername);
         }
     } else {
-        console.log('User ID found in sessionStorage:', currentUserId);
+        console.log('Username found in sessionStorage:', currentUsername);
     }
     
-    // If still no user ID, use a default
-    if (!currentUserId) {
-        currentUserId = '1'; // Default user ID for testing
-        console.log('No user ID found, using default:', currentUserId);
+    // If still no username, redirect to login
+    if (!currentUsername) {
+        console.log('No username found, redirecting to login...');
+        window.location.href = 'login.html';
+        return;
     }
     
     // Clear any cached data before fetching
-    console.log('Fetching materials for user ID:', currentUserId);
+    console.log('Fetching materials for username:', currentUsername);
     
     // Fetch materials from the API
-    fetchUserMaterials(currentUserId);
+    fetchUserMaterials(currentUsername);
     
     // Toggle filter dropdown
     filterBtn.addEventListener('click', function() {
@@ -204,19 +205,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Function to fetch user materials from the API
-    async function fetchUserMaterials(userId) {
+    async function fetchUserMaterials(username) {
         try {
             // Display loading message
             displayLoadingMessage('Loading your materials...');
             
             // Add a timestamp to prevent caching
             const timestamp = new Date().getTime();
-            console.log(`Attempting to fetch from: http://localhost:8080/mm/items/student/${userId}?_=${timestamp}`);
+            console.log(`Attempting to fetch from: http://localhost:8080/mm/items/student/${username}?_=${timestamp}`);
             
             // Fetch materials from the API
             let materials = [];
             try {
-                const response = await fetch(`http://localhost:8080/mm/items/student/${userId}?_=${timestamp}`, {
+                const response = await fetch(`http://localhost:8080/mm/items/student/${username}?_=${timestamp}`, {
                     // Add cache control headers
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
