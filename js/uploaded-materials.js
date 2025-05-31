@@ -10,33 +10,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // Materials container
     const materialsContainer = document.querySelector('.materials');
     
-    // Try to get the username from sessionStorage or localStorage
-    let currentUsername = sessionStorage.getItem('currentUsername');
+    // Try to get the user ID from sessionStorage or localStorage
+    let currentUserId = sessionStorage.getItem('currentUserId');
     
     // If not in sessionStorage, try localStorage as a backup
-    if (!currentUsername) {
-        currentUsername = localStorage.getItem('currentUsername');
-        if (currentUsername) {
-            console.log('Username found in localStorage:', currentUsername);
+    if (!currentUserId) {
+        currentUserId = localStorage.getItem('currentUserId');
+        if (currentUserId) {
+            console.log('User ID found in localStorage:', currentUserId);
             // Copy to sessionStorage for consistency
-            sessionStorage.setItem('currentUsername', currentUsername);
+            sessionStorage.setItem('currentUserId', currentUserId);
         }
     } else {
-        console.log('Username found in sessionStorage:', currentUsername);
+        console.log('User ID found in sessionStorage:', currentUserId);
     }
     
-    // If still no username, redirect to login
-    if (!currentUsername) {
-        console.log('No username found, redirecting to login...');
-        window.location.href = 'login.html';
-        return;
+    // If still no user ID, use a default
+    if (!currentUserId) {
+        currentUserId = '1'; // Default user ID for testing
+        console.log('No user ID found, using default:', currentUserId);
     }
     
     // Clear any cached data before fetching
-    console.log('Fetching materials for username:', currentUsername);
+    console.log('Fetching materials for user ID:', currentUserId);
     
     // Fetch materials from the API
-    fetchUserMaterials(currentUsername);
+    fetchUserMaterials(currentUserId);
     
     // Toggle filter dropdown
     filterBtn.addEventListener('click', function() {
