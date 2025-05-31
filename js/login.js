@@ -11,6 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = usernameField.value.trim();
         const password = passwordField.value.trim();
 
+        // Kiểm tra tài khoản admin mặc định
+        if (username === 'admin' && password === 'admin') {
+            console.log('Admin login successful. Redirecting to admin page...');
+            // Lưu thông tin admin vào storage nếu cần thiết
+            sessionStorage.setItem('username', 'admin');
+            localStorage.setItem('username', 'admin');
+             // Có thể lưu thêm cờ is_admin vào storage nếu cần phân quyền ở frontend
+             sessionStorage.setItem('is_admin', 'true');
+             localStorage.setItem('is_admin', 'true');
+
+            window.location.href = '/html/admin/admin.html'; // Chuyển hướng đến trang admin với đường dẫn tuyệt đối
+            return;
+        }
+
         if (!username) {
             showErrorMessage('Please enter your username, email or phone number', usernameField);
             usernameField.focus();
