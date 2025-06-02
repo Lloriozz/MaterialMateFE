@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaterialMate - Book List</title>
+    <title>MaterialMate - Bookshop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/book-list.css">
 </head>
@@ -12,7 +12,7 @@
     <header>
         <div class="logo">
             <a href="home.html">
-                <img src="../assets/menubar logo.png" alt="Material Mate Logo">
+                <img src="../../assets/menubar logo.png" alt="Material Mate Logo">
             </a>
         </div>
         
@@ -22,11 +22,11 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
-        
+
         <nav>
             <ul>
-                <li><a href="home.html">Home</a></li>
-                <li><a href="book-list.html" class="active">Bookshop</a></li>
+                <li><a href="admin-home.html">Home</a></li>
+                <li><a href="admin-blist.html" class="active">Bookshop</a></li>
                 <li><a href="upload-page.html">Upload</a></li>
             </ul>
         </nav>
@@ -36,8 +36,8 @@
                 <i class="fas fa-user"></i>
             </div>
             <div class="user-info">
-                <span class="user-name">User</span>
-                <span class="user-credit">0 credits</span>
+                <span class="user-name">Truong Quoc Khanh</span>
+                <span class="user-credit">Credit: 01</span>
             </div>
             <div class="dropdown-menu">
                 <div>
@@ -50,41 +50,13 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Main Content - Book Grid -->
     <main>
-        <div class="container">
-            <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="filter-group">
-                    <select id="category">
-                        <option value="">All Categories</option>
-                        <option value="textbook">Textbook</option>
-                        <option value="lecture">Lecture</option>
-                        <option value="exam">Exam</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <select id="sort">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="title">Title</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Book Grid -->
-            <div class="book-grid" id="bookGrid">
-                <!-- Book cards will be dynamically added here -->
-            </div>
-
-            <!-- Loading Spinner -->
-            <div class="loading-spinner" id="loadingSpinner">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
+        <div class="book-grid-container">
+            
         </div>
     </main>
-
+    
     <!-- Footer -->
     <footer>
         <div class="footer-left">
@@ -107,7 +79,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-right">
             <h3>Follow us</h3>
             <div class="social-icons">
@@ -127,6 +99,7 @@
         </div>
     </footer>
 
+    <!-- Custom JavaScript -->
     <script src="../js/book-list.js"></script>
     <script src="../js/user-info.js"></script>
 </body>

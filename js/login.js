@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Lưu thông tin admin vào storage nếu cần thiết
             sessionStorage.setItem('username', 'admin');
             localStorage.setItem('username', 'admin');
-             // Có thể lưu thêm cờ is_admin vào storage nếu cần phân quyền ở frontend
-             sessionStorage.setItem('is_admin', 'true');
-             localStorage.setItem('is_admin', 'true');
-
-            window.location.href = '/html/admin/admin.html'; // Chuyển hướng đến trang admin với đường dẫn tuyệt đối
+            sessionStorage.setItem('is_admin', 'true');
+            localStorage.setItem('is_admin', 'true');
+            setTimeout(() => {
+                window.location.href = '../../html/adminHandle/admin-home.html';
+            }, 200);
             return;
         }
 
@@ -117,6 +117,10 @@ document.addEventListener('DOMContentLoaded', function () {
             sessionStorage.setItem('currentUserId', userId);
             localStorage.setItem('currentUserId', userId);
 
+            // Lưu username vào sessionStorage và localStorage
+            sessionStorage.setItem('username', username);
+            localStorage.setItem('username', username);
+
             // If login successful, get user information
             try {
                 // Get student ID first
@@ -171,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Redirect to home page after showing the information
                 setTimeout(() => {
                     window.location.href = 'home.html';
-                }, 3000);
+                }, 200);
 
             } catch (error) {
                 console.error('Error fetching user information:', error);

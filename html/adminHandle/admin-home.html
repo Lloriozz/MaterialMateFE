@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaterialMate - Book List</title>
+    <title>MaterialMate - Admin Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/book-list.css">
+    <link rel="stylesheet" href="../../css/adminHandle/admin-home.css">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="logo">
-            <a href="home.html">
-                <img src="../assets/menubar logo.png" alt="Material Mate Logo">
+            <a href="../../html/adminHandle/admin-home.html">
+                <img src="../../assets/menubar logo.png" alt="Material Mate Logo">
             </a>
         </div>
         
@@ -25,9 +25,10 @@
         
         <nav>
             <ul>
-                <li><a href="home.html">Home</a></li>
-                <li><a href="book-list.html" class="active">Bookshop</a></li>
-                <li><a href="upload-page.html">Upload</a></li>
+                <li><a href="../../adminHadle/admin-home.html" class="active">Home</a></li>
+                <li><a href="../book-list.html">Bookshop</a></li>
+                <li><a href="../upload-page.html">Upload</a></li>
+                <li><a href="data.html" class="active">Data</a></li>
             </ul>
         </nav>
         
@@ -36,8 +37,8 @@
                 <i class="fas fa-user"></i>
             </div>
             <div class="user-info">
-                <span class="user-name">User</span>
-                <span class="user-credit">0 credits</span>
+                <span class="user-name">Admin</span>
+                <span class="user-credit"></span>
             </div>
             <div class="dropdown-menu">
                 <div>
@@ -52,36 +53,39 @@
 
     <!-- Main Content -->
     <main>
-        <div class="container">
-            <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="filter-group">
-                    <select id="category">
-                        <option value="">All Categories</option>
-                        <option value="textbook">Textbook</option>
-                        <option value="lecture">Lecture</option>
-                        <option value="exam">Exam</option>
-                    </select>
+        <div class="main-container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <!-- Left Book Illustration -->
+                <div class="book-left">
+                    <img src="../../assets/orange-removebg-preview 1.png" alt="Orange book illustration">
                 </div>
                 
-                <div class="filter-group">
-                    <select id="sort">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="title">Title</option>
-                    </select>
+                <!-- Right Book Illustration -->
+                <div class="book-right">
+                    <img src="../../assets/blue-removebg-preview 1.png" alt="Blue book illustration">
                 </div>
-            </div>
-
-            <!-- Book Grid -->
-            <div class="book-grid" id="bookGrid">
-                <!-- Book cards will be dynamically added here -->
-            </div>
-
-            <!-- Loading Spinner -->
-            <div class="loading-spinner" id="loadingSpinner">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
+                
+                <!-- Bottom Right Book Illustration -->
+                <div class="book-bottom-right">
+                    <img src="../../assets/1db9842ca0c65007896fa3f3140a4d49-removebg-preview 1.png" alt="Yellow book illustration">
+                </div>
+                
+                <!-- Center Book Stack -->
+                <div class="book-stack">
+                    <img src="../../assets/Material_Mate-removebg-preview 3.png" alt="Stack of books">
+                </div>
+                
+                <!-- Welcome Text -->
+                <h1 class="welcome-title">Welcome back, <span class="text-orange">Boss!</span></h1>
+                <h2 class="welcome-subtitle">The best website for <span class="text-primary">exchanging materials</span></h2>
+                <p class="welcome-quote">"A material a day keeps a person awake"</p>
+                
+                <!-- CTA Button -->
+                <div class="cta-container">
+                    <a href="admin.html" class="btn-orange">Let's approve!</a>
+                </div>
+            </section>
         </div>
     </main>
 
@@ -127,7 +131,7 @@
         </div>
     </footer>
 
-    <script src="../js/book-list.js"></script>
-    <script src="../js/user-info.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="../../js/adminHandle/admin-home.js"></script>
 </body>
 </html>
