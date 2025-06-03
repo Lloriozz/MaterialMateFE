@@ -152,18 +152,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch user materials from the API
     async function fetchExchangedMaterials(studentId) {
         try {
-            // Display loading message
             displayLoadingMessage('Loading exchanged materials...');
             
-            // Add a timestamp to prevent caching
             const timestamp = new Date().getTime();
             console.log(`Attempting to fetch from: http://localhost:8080/mm/exchanges/downloads/${studentId}?_=${timestamp}`);
             
-            // Fetch materials from the API
             let materials = [];
             try {
                 const response = await fetch(`http://localhost:8080/mm/exchanges/downloads/${studentId}?_=${timestamp}`, {
-                    // Add cache control headers
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
@@ -178,27 +174,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 const responseText = await response.text();
                 console.log('Raw API response:', responseText);
                 
-                // Only try to parse as JSON if we have a non-empty response
                 if (responseText && responseText.trim() !== '') {
                     try {
                         materials = JSON.parse(responseText);
+                        console.log('Parsed materials:', materials);
                     } catch (parseError) {
                         console.error('Error parsing JSON:', parseError);
                         throw new Error('Invalid JSON response from server');
                     }
                 } else {
-                     console.log('API returned empty response, assuming no materials.');
+                    console.log('API returned empty response, assuming no materials.');
                 }
-                
-                console.log('Processed materials from API:', materials);
             } catch (apiError) {
                 console.error('API error:', apiError);
                 displayErrorMessage(`Error loading exchanged materials: ${apiError.message}. Please try again later.`);
-                return; // Exit the function early
+                return;
             }
             
-            // Display the materials (either from API or fallback)
-            displayExchangedMaterials(materials);
+            // Fetch additional details for each material
+            const materialsWithDetails = await Promise.all(materials.map(async (material) => {
+                try {
+                    console.log('Processing material:', material);
+                    
+                    // Kiểm tra và lấy itemID từ material.item
+                    if (!material.item || !material.item.itemID) {
+                        console.error('No item or itemID found in material:', material);
+                        return {
+                            ...material,
+                            title: 'Error: No item ID',
+                            imageCover: null,
+                            category: 'Unknown',
+                            pdfFile: null,
+                            uploader: 'Unknown'
+                        };
+                    }
+                    
+                    const itemID = material.item.itemID;
+                    
+                    // Fetch item details using itemID
+                    console.log(`Fetching item details for itemID: ${itemID}`);
+                    const itemResponse = await fetch(`http://localhost:8080/mm/items/${itemID}`);
+                    if (!itemResponse.ok) {
+                        throw new Error(`Failed to fetch item details: ${itemResponse.status}`);
+                    }
+                    const itemDetails = await itemResponse.json();
+                    console.log('Item details:', itemDetails);
+                    
+                    // Fetch uploader username using studentID
+                    console.log(`Fetching username for studentID: ${itemDetails.uploaderID}`);
+                    const uploaderResponse = await fetch(`http://localhost:8080/mm/students/username/${itemDetails.uploaderID}`);
+                    if (!uploaderResponse.ok) {
+                        throw new Error(`Failed to fetch uploader details: ${uploaderResponse.status}`);
+                    }
+                    const uploaderDetails = await uploaderResponse.json();
+                    console.log('Uploader details:', uploaderDetails);
+                    
+                    return {
+                        ...material,
+                        title: itemDetails.title || 'Untitled',
+                        imageCover: itemDetails.coverImage || null,
+                        category: itemDetails.category || 'Uncategorized',
+                        pdfFile: itemDetails.fileData || null,
+                        uploader: uploaderDetails.username || 'Unknown'
+                    };
+                } catch (error) {
+                    console.error('Error fetching details:', error);
+                    return {
+                        ...material,
+                        title: 'Error loading title',
+                        imageCover: null,
+                        category: 'Unknown',
+                        pdfFile: null,
+                        uploader: 'Unknown'
+                    };
+                }
+            }));
+            
+            console.log('Final materials with details:', materialsWithDetails);
+            displayExchangedMaterials(materialsWithDetails);
         } catch (error) {
             console.error('Error in fetchExchangedMaterials:', error);
             displayErrorMessage('Failed to load exchanged materials. Please try again later.');
@@ -226,27 +279,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to create a material item element
     function createMaterialItem(material) {
-        const item = document.createElement('div');
-        item.className = 'material-item';
+        const materialItem = document.createElement('div');
+        materialItem.className = 'material-item';
         
-        // Format date (assuming material.exchangeDate is in ISO format)
-        const exchangeDate = material.exchangeDate ? new Date(material.exchangeDate) : new Date();
+        // Format date
+        const exchangeDate = new Date(material.date);
         const formattedDate = `${exchangeDate.getDate()} - ${exchangeDate.getMonth() + 1} - ${exchangeDate.getFullYear()}`;
         
-        item.innerHTML = `
-            <div class="material-thumbnail"></div>
+        // Create image source
+        let imageSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+        if (material.imageCover) {
+            imageSrc = `data:image/jpeg;base64,${material.imageCover}`;
+        }
+        
+        materialItem.innerHTML = `
+            <div class="material-image">
+                <img src="${imageSrc}" 
+                     alt="${material.title}"
+                     onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='">
+            </div>
             <div class="material-info">
-                <h3 class="material-title">${material.title || 'Untitled Material'}</h3>
-                <p class="material-uploader">Uploader: ${material.uploader || 'N/A'}</p>
+                <h3 class="material-title">${material.title}</h3>
+                <p class="material-category">Category: ${material.category}</p>
+                <p class="material-uploader">Uploaded by: ${material.uploader}</p>
                 <p class="material-date">Exchanged in: ${formattedDate}</p>
             </div>
             <div class="material-actions">
-                <button class="btn-view">View</button>
-                <button class="btn-download">Download</button>
+                <button class="view-btn" onclick="viewPDF('${material.pdfFile}')">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                <button class="download-btn" onclick="downloadPDF('${material.pdfFile}', '${material.title}')">
+                    <i class="fas fa-download"></i> Download
+                </button>
             </div>
         `;
         
-        return item;
+        return materialItem;
     }
     
     // Function to display error message
@@ -261,3 +329,75 @@ document.addEventListener('DOMContentLoaded', function() {
         materialsContainer.innerHTML = `<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> ${message}</div>`;
     }
 });
+
+// Function to view PDF in a new tab
+function viewPDF(pdfBase64) {
+    if (!pdfBase64) {
+        alert('PDF file not available');
+        return;
+    }
+    
+    try {
+        // Convert base64 to blob
+        const byteCharacters = atob(pdfBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Open PDF in new window
+        const newWindow = window.open(blobUrl, '_blank');
+        if (!newWindow) {
+            alert('Please allow popups to view PDF files');
+        }
+        
+        // Clean up URL after a delay
+        setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+        }, 1000);
+    } catch (error) {
+        console.error('Error viewing PDF:', error);
+        alert('Error viewing PDF file. Please try again.');
+    }
+}
+
+// Function to download PDF
+function downloadPDF(pdfBase64, title) {
+    if (!pdfBase64) {
+        alert('PDF file not available');
+        return;
+    }
+    
+    try {
+        // Convert base64 to blob
+        const byteCharacters = atob(pdfBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up
+        setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+        }, 1000);
+    } catch (error) {
+        console.error('Error downloading PDF:', error);
+        alert('Error downloading PDF file. Please try again.');
+    }
+}

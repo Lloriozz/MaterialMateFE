@@ -160,22 +160,24 @@ nav ul li a {
 /* Main Content Styles */
 .main-content {
     display: flex;
-    max-width: 1200px;
+    flex-direction: row-reverse;
+    max-width: 1300px;
     margin: 30px auto;
     min-height: calc(100vh - 200px);
 }
 
 .container {
-    flex-grow: 1; /* Make container take remaining space */
+    flex-grow: 1;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 200px);
 }
 
 .sidebar {
     width: 250px;
-    margin-right: 30px; /* Add space between sidebar and main content */
+    margin-left: 30px;
 }
 
 .sidebar h1 {
@@ -200,7 +202,7 @@ nav ul li a {
 
 .sidebar-menu li.active {
     font-weight: bold;
-    color: #2c5282; /* Màu chủ đạo */
+    color: #2c5282;
 }
 
 .sidebar-menu li a {
@@ -306,7 +308,7 @@ nav ul li a {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-height: 600px; /* Giới hạn chiều cao để có scroll */
+    max-height: 600px;
     overflow-y: auto;
     padding-right: 10px;
 }
@@ -333,28 +335,31 @@ nav ul li a {
 .material-item {
     display: flex;
     align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
 }
 
-.material-item:last-child {
-    border-bottom: none;
+.material-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.material-thumbnail {
-    width: 100px;
-    height: 120px; /* Tăng chiều cao cho ảnh bìa */
-    background-color: #ddd; /* Placeholder màu xám */
+.material-image {
+    width: 120px;
+    height: 160px;
     margin-right: 20px;
-    flex-shrink: 0;
     border-radius: 4px;
-    overflow: hidden; /* Đảm bảo ảnh không tràn ra ngoài */
+    overflow: hidden;
 }
 
-.material-thumbnail img {
-     width: 100%;
-     height: 100%;
-     object-fit: cover; /* Giữ tỷ lệ ảnh */
+.material-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .material-info {
@@ -362,72 +367,81 @@ nav ul li a {
 }
 
 .material-title {
-    color: #2c5aa0;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
 }
 
+.material-category,
 .material-uploader,
 .material-date {
-    color: #777;
-    font-size: 0.9rem;
-    margin-bottom: 3px;
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
 }
 
 .material-actions {
     display: flex;
     gap: 10px;
-    flex-shrink: 0;
+    margin-left: 20px;
 }
 
-.btn-view {
-    background-color: #ff6b35;
-    color: white;
+.view-btn,
+.download-btn {
+    padding: 8px 16px;
     border: none;
-    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
 }
 
-.btn-view:hover {
-    background-color: #e55a2b;
-}
-
-.btn-download {
-    background-color: #4a90e2;
+.view-btn {
+    background-color: #4CAF50;
     color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
 }
 
-.btn-download:hover {
-    background-color: #357abd;
+.download-btn {
+    background-color: #2196F3;
+    color: white;
 }
 
-/* Messages (Loading, Error, No Materials) */
-.loading-message,
-.error-message,
+.view-btn:hover {
+    background-color: #45a049;
+}
+
+.download-btn:hover {
+    background-color: #1976D2;
+}
+
 .no-materials {
     text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 1.1em;
+}
+
+/* Loading and error messages */
+.loading-message,
+.error-message {
+    text-align: center;
     padding: 20px;
-    font-size: 1.1rem;
-    color: #555;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.loading-message {
+    background-color: #e3f2fd;
+    color: #1976D2;
 }
 
 .error-message {
-    color: #d9534f; /* Red */
-}
-
-.loading-message i {
-    margin-right: 10px;
+    background-color: #ffebee;
+    color: #c62828;
 }
 
 /* Footer styles */
