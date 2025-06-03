@@ -1,12 +1,24 @@
+/* Custom Colors */
+:root {
+    --orange: #ff5733;
+    --blue: #2e59a7;
+    --light-blue: #4a7fd6;
+    --yellow: #ffc107;
+}
+
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header styles */
@@ -17,8 +29,6 @@ header {
     padding: 15px 50px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1000;
 }
 
 .logo {
@@ -75,11 +85,11 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #ff6b35;
+    color: var(--orange);
 }
 
 nav ul li a.active {
-    color: #ff6b35;
+    color: var(--orange);
 }
 
 /* User Profile Container */
@@ -183,17 +193,41 @@ nav ul li a.active {
 
 /* Main content styles */
 main {
-    padding: 20px 40px;
+    padding: 20px 20px;
     background-color: #f5f5f5;
-    min-height: calc(100vh - 70px - 120px);
+    flex-grow: 1;
+}
+
+/* Filter Section */
+.filter-section {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto 2rem auto;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-weight: 500;
 }
 
 /* Book Grid Layout - 4 columns like the target image */
-.book-grid-container {
+.book-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 20px 0;
 }
@@ -207,7 +241,8 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    height: auto;
+    width: 300px;
+    height: 400px;
 }
 
 .book-card:hover {
@@ -217,7 +252,7 @@ main {
 
 .book-image {
     width: 100%;
-    height: 200px;
+    height: 78%;
     overflow: hidden;
     background-color: #f5f5f5;
     display: flex;
@@ -234,24 +269,42 @@ main {
 }
 
 .book-details {
-    padding: 15px;
+    padding: 15px 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    
 }
 
 .book-title {
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: 600;
-    margin: 0 0 10px 0;
+    margin-bottom: 5px;
     color: #333;
-    line-height: 1.3;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+.book-university {
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.book-description-text {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 10px;
+    flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 2.6em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .book-author {
@@ -261,17 +314,22 @@ main {
 }
 
 .book-category {
-    font-size: 11px;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.book-uploader {
+    font-size: 0.9rem;
     color: #888;
-    margin: 5px 0;
 }
 
 .book-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0;
-    font-size: 11px;
+    margin-top: 5px;
+    font-size: 0.9rem;
 }
 
 .book-condition {
@@ -280,11 +338,7 @@ main {
     padding: 2px 6px;
     border-radius: 8px;
     font-size: 10px;
-}
-
-.book-uploader {
-    color: #666;
-    font-size: 10px;
+    font-weight: 500;
 }
 
 .btn-get {
@@ -292,7 +346,7 @@ main {
     background-color: #ff5733;
     color: white;
     text-align: center;
-    padding: 8px 12px;
+    padding: 5px 10px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
@@ -300,9 +354,9 @@ main {
     transition: background-color 0.2s ease;
     border: none;
     cursor: pointer;
-    width: 100%;
+    width: auto;
     box-sizing: border-box;
-    margin-top: auto;
+    margin-top: 0;
 }
 
 .btn-get:hover {
@@ -314,7 +368,7 @@ main {
 /* Loading and Error States */
 .loading,
 .error {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
     text-align: center;
     padding: 3rem 1rem;
     font-size: 1.2rem;
@@ -404,56 +458,79 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .book-grid-container {
+    .book-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 18px;
+        max-width: 1000px;
+    }
+    
+    .book-card {
+        width: auto;
+        height: auto;
+    }
+
+    .book-image {
+        height: 250px;
+        max-height: 180px;
     }
 }
 
 @media (max-width: 900px) {
-    .book-grid-container {
+    .book-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
+        max-width: 700px;
+    }
+    
+    .book-card {
+        width: auto;
+        height: auto;
+    }
+
+    .book-image {
+        height: 200px;
+        max-height: 150px;
     }
     
     main {
-        padding: 15px 20px;
+        padding: 15px 10px;
     }
 }
 
-@media (max-width: 600px) {
-    .book-grid-container {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
+@media (max-width: 768px) {
     header {
         flex-wrap: wrap;
         padding: 15px 20px;
     }
-    
+
     .search-bar {
         order: 3;
         width: 100%;
         margin-top: 15px;
     }
-    
+
     nav ul {
         gap: 15px;
     }
-    
-    footer {
+
+    .filter-section {
         flex-direction: column;
-        gap: 30px;
-        text-align: center;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .book-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
     
-    .footer-left {
-        flex-direction: column;
-        align-items: center;
+    .book-card {
+        width: auto;
+        height: auto;
     }
-    
-    .footer-logo {
-        margin: 0 0 20px 0;
+
+    .book-image {
+        height: 180px;
+        max-height: 120px;
     }
 }
