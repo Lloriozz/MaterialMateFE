@@ -244,19 +244,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const student = await createStudentAccount(username, password);
             
             // Store username for profile setup
+            console.log('About to store username in localStorage:', username);
             localStorage.setItem('mm_signup_username', username);
-            console.log('Username stored in localStorage:', username);
+            console.log('Username stored. Current localStorage value:', localStorage.getItem('mm_signup_username'));
             
             // Show success message
             showSuccessMessage('Account created successfully! Taking you to profile setup...');
             
-            // Redirect to profile setup page using full path
-            console.log('Redirecting to profile setup...');
+            // Redirect to profile setup page
+            console.log('Preparing to redirect...');
             setTimeout(() => {
-                const baseUrl = window.location.origin;
-                const currentPath = window.location.pathname;
-                const profileSetupPath = currentPath.replace('signup.html', 'profile-setup.html');
-                window.location.href = baseUrl + profileSetupPath;
+                const storedUsername = localStorage.getItem('mm_signup_username');
+                if (!storedUsername) {
+                    console.error('Username not found in localStorage before redirect');
+                    localStorage.setItem('mm_signup_username', username); // Try storing again
+                }
+                console.log('Username in localStorage before redirect:', storedUsername);
+                console.log('Redirecting to profile setup...');
+                window.location.href = '/html/profile-setup.html';
             }, 1000);
             
         } catch (error) {
@@ -280,26 +285,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // CREATE STUDENT ACCOUNT
     async function createStudentAccount(username, password) {
         console.log('Attempting to create account for:', username);
-        const response = await fetch(`${API_BASE_URL}/students/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        });
+        try {
+            const response = await fetch(`${API_BASE_URL}/students/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
 
-        if (!response.ok) {
-            const error = await response.text();
-            console.error('Signup error:', error);
-            throw new Error(error);
+            console.log('Signup response status:', response.status);
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+
+            if (!response.ok) {
+                console.error('Signup error response:', responseText);
+                throw new Error(responseText);
+            }
+
+            try {
+                const data = JSON.parse(responseText);
+                console.log('Account created successfully:', data);
+                return data;
+            } catch (parseError) {
+                console.error('Error parsing response:', parseError);
+                throw new Error('Invalid response format from server');
+            }
+        } catch (error) {
+            console.error('Network or server error:', error);
+            throw error;
         }
-
-        const data = await response.json();
-        console.log('Account created successfully:', data);
-        return data;
     }
 
     // Show field error
