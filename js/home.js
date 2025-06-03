@@ -57,4 +57,53 @@ document.addEventListener('DOMContentLoaded', function() {
             navbarCollapse.classList.toggle('show');
         });
     }
+
+    const searchInput = document.querySelector('.search-bar input');
+    const searchButton = document.querySelector('.search-bar button');
+    
+    if (searchInput && searchButton) {
+        let allBooks = [];
+        
+        const originalDisplayBooks = displayBooks;
+        displayBooks = function(books) {
+            allBooks = books;
+            originalDisplayBooks(books);
+        };
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (!searchTerm) {
+                originalDisplayBooks(allBooks);
+                return;
+            }
+            
+            const filteredBooks = allBooks.filter(book => 
+                book.title.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredBooks.length === 0) {
+                showError(`No books found for "${searchTerm}"`);
+            } else {
+                originalDisplayBooks(filteredBooks);
+            }
+        }
+        
+        searchButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+        
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+        });
+        
+        searchInput.addEventListener('input', function() {
+            if (this.value.trim() === '') {
+                originalDisplayBooks(allBooks);
+            }
+        });
+    }
 });
