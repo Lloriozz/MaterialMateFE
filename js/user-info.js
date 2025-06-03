@@ -70,7 +70,7 @@ function logout() {
     sessionStorage.removeItem('userCredits');
     
     // Chuyển hướng về trang login
-    window.location.href = '/html/login.html';
+    window.location.href = '../../html/login.html';
 }
 
 // Khởi tạo khi trang được tải
