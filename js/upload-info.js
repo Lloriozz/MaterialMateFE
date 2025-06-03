@@ -207,129 +207,27 @@ function goToStorage() {
     window.location.href = 'uploaded-materials.html';
 }
 
-// Hàm cập nhật credit sau khi upload thành công
-async function updateUserCredit() {
-    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
-    console.log('updateUserCredit called for username:', username);
-
-    if (!username) {
-        console.warn('No username found in storage for updating credits');
-        return;
-    }
-
+// Sửa lại hàm xử lý upload thành công
+async function handleUploadSuccess(response) {
+    console.log('handleUploadSuccess called.');
     try {
-        // Bước 1: Lấy số credit hiện tại
-        console.log('Fetching current credits for user:', username);
-        const currentCreditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`);
+        // Tạo bản sao của response để có thể đọc nhiều lần nếu cần
+        const clonedResponse = response.clone();
+        const result = await clonedResponse.json();
+        console.log('Upload successful (handleUploadSuccess):', result);
 
-        console.log('/credits (GET) response status:', currentCreditsResponse.status);
-        if (!currentCreditsResponse.ok) {
-             const errorText = await currentCreditsResponse.text();
-             console.error('/credits (GET) response error text:', errorText);
-            throw new Error(`Failed to fetch current credits. Status: ${currentCreditsResponse.status}`);
-        }
+        // --- Logic hiển thị thành công (quay lại dùng modal) ---
+        console.log('Showing success modal...');
+        document.getElementById('successModal').style.display = 'flex';
+        // --- End Logic hiển thị thành công ---
 
-        const currentCredits = await currentCreditsResponse.json();
-        console.log('Current credits fetched:', currentCredits);
-
-        // Bước 2: Tính toán số credit mới (+1)
-        const newCreditsValue = (currentCredits || 0) + 1;
-        console.log('Calculated new credits value:', newCreditsValue);
-
-        // Bước 3: Gửi yêu cầu PUT để cập nhật credit trong database
-        console.log('Putting new credits for user:', username, 'value:', newCreditsValue);
-        const updateResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newCreditsValue) // Gửi giá trị số credit mới
-             // Hoặc có thể là JSON.stringify({ credits: newCreditsValue }) tùy thuộc backend
-             // Dựa vào Postman test của bạn, body có thể là { credits: newCreditsValue }
-        });
-
-         // Thử gửi dạng object { credits: value } dựa trên postman test của bạn
-         if (!updateResponse.ok) { // Nếu request PUT đầu tiên lỗi, thử lại với dạng object
-              console.warn('PUT with raw value failed (status:', updateResponse.status, '). Trying with { credits: value } format.');
-              const updateResponseWithObject = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
-                    method: 'PUT',
-                    headers: {
-                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ credits: newCreditsValue })
-              });
-
-              console.log('PUT with {credits: value} response status:', updateResponseWithObject.status);
-
-              if (!updateResponseWithObject.ok) {
-                  const errorText = await updateResponseWithObject.text();
-                  console.error('/credits (PUT with object) response error text:', errorText);
-                 throw new Error(`Failed to update credits with object format. Status: ${updateResponseWithObject.status}`);
-              }
-              // Nếu PUT với object thành công, sử dụng response này
-              const updatedCredits = await updateResponseWithObject.json();
-              console.log('Updated credits from PUT response (object format):', updatedCredits);
-              // Cập nhật hiển thị và storage
-              // *** Cần kiểm tra cấu trúc của updatedCredits và lấy giá trị số ***
-              // Giả sử backend trả về { credits: value } hoặc chỉ giá trị số
-              let finalCreditValue = newCreditsValue; // Mặc định dùng giá trị đã tính
-
-              if (typeof updatedCredits === 'number') {
-                  finalCreditValue = updatedCredits;
-                  console.log('Backend returned number directly:', finalCreditValue);
-              } else if (updatedCredits && typeof updatedCredits === 'object' && updatedCredits.credits !== undefined) {
-                  finalCreditValue = updatedCredits.credits;
-                  console.log('Backend returned object with credits field:', finalCreditValue);
-              } else {
-                   console.warn('Could not extract numerical credit value from backend response:', updatedCredits);
-              }
-
-              sessionStorage.setItem('userCredits', finalCreditValue);
-              localStorage.setItem('userCredits', finalCreditValue);
-              console.log('Credits updated in storage:', finalCreditValue);
-              updateCreditDisplay();
-              console.log('Credits updated successfully and display refreshed (object format).');
-              return; // Kết thúc hàm nếu thành công với object
-         }
-
-        // Nếu PUT với raw value thành công
-        const updatedCredits = await updateResponse.json(); // Có thể backend trả về credit mới
-        console.log('Updated credits from PUT response (raw value format):', updatedCredits);
-
-        // *** Cần kiểm tra cấu trúc của updatedCredits và lấy giá trị số ***
-        // Giả sử backend trả về { credits: value } hoặc chỉ giá trị số
-        let finalCreditValue = newCreditsValue; // Mặc định dùng giá trị đã tính
-
-        if (typeof updatedCredits === 'number') {
-            finalCreditValue = updatedCredits;
-            console.log('Backend returned number directly:', finalCreditValue);
-        } else if (updatedCredits && typeof updatedCredits === 'object' && updatedCredits.credits !== undefined) {
-            finalCreditValue = updatedCredits.credits;
-            console.log('Backend returned object with credits field:', finalCreditValue);
-        } else {
-             console.warn('Could not extract numerical credit value from backend response:', updatedCredits);
-        }
-
-        // Cập nhật credit trong storage
-        const creditElements = document.querySelectorAll('.user-credit');
-        console.log('Found .user-credit elements:', creditElements.length);
-        creditElements.forEach(element => {
-            element.textContent = `Credit: ${finalCreditValue}`;
-            console.log('Updated element text to:', element.textContent);
-        });
-
-        sessionStorage.setItem('userCredits', finalCreditValue);
-        localStorage.setItem('userCredits', finalCreditValue);
-        console.log('Credits updated in storage:', finalCreditValue);
-
-        console.log('Credits updated successfully and display refreshed (raw value format).');
+        // Xóa session storage sau khi xử lý thành công
+        sessionStorage.removeItem('uploadedFile');
+        sessionStorage.removeItem('fileName');
+        sessionStorage.removeItem('coverImage');
 
     } catch (error) {
-        console.error('Error in updateUserCredit:', error);
-        const creditElements = document.querySelectorAll('.user-credit');
-         creditElements.forEach(element => {
-             element.textContent = 'Credit: N/A'; // Hiển thị N/A nếu có lỗi
-         });
+        console.error('Error handling upload success:', error);
     }
 }
 
@@ -349,36 +247,4 @@ function updateCreditDisplay() {
           element.textContent = `Credit: ${displayValue}`;
      });
      console.log('Credit display updated to:', `Credit: ${displayValue}`);
-}
-
-// Sửa lại hàm xử lý upload thành công
-async function handleUploadSuccess(response) {
-    console.log('handleUploadSuccess called.');
-    try {
-        // Tạo bản sao của response để có thể đọc nhiều lần nếu cần
-        const clonedResponse = response.clone();
-        const result = await clonedResponse.json();
-        console.log('Upload successful (handleUploadSuccess):', result);
-
-        // Cập nhật credit sau khi upload thành công
-        await updateUserCredit();
-
-        // --- Logic hiển thị thành công (quay lại dùng modal) ---
-        console.log('Showing success modal...');
-        document.getElementById('successModal').style.display = 'flex';
-        // --- End Logic hiển thị thành công ---
-
-        // Xóa session storage sau khi xử lý thành công
-        sessionStorage.removeItem('uploadedFile');
-        sessionStorage.removeItem('fileName');
-        sessionStorage.removeItem('coverImage');
-
-        // Xóa bỏ chuyển hướng tự động
-        // setTimeout(() => {
-        //     window.location.href = 'home.html';
-        // }, 3000);
-
-    } catch (error) {
-        console.error('Error handling upload success:', error);
-    }
 }
