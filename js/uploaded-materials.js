@@ -300,6 +300,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
+        // Add the cover image if available
+        const thumbnailDiv = item.querySelector('.material-thumbnail');
+        if (material.coverImage && thumbnailDiv) {
+            const img = document.createElement('img');
+            // Assuming the cover image is base64 encoded and is a JPEG
+            img.src = `data:image/jpeg;base64,${material.coverImage}`;
+            img.alt = `${material.title || 'Material'} Cover`;
+            img.style.width = '100%'; // Ensure image fills the container
+            img.style.height = 'auto'; // Maintain aspect ratio
+            img.style.objectFit = 'cover'; // Cover the area without distortion
+            thumbnailDiv.appendChild(img);
+        } else if (thumbnailDiv) {
+            // Optional: Add a placeholder image or text if no cover is available
+            thumbnailDiv.innerHTML = '<div class="placeholder-image"></div>'; // Using the placeholder div from HTML
+        }
+        
         return item;
     }
     

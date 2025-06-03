@@ -378,8 +378,12 @@ nav ul li a {
 .material-item {
     display: flex;
     align-items: center;
-    padding: 0px 0 15px 0;
-    border-bottom: 1px solid #eee;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 180px; /* Tăng chiều cao từ 150px lên 180px */
 }
 
 .material-thumbnail {
@@ -388,6 +392,7 @@ nav ul li a {
     background-color: #444;
     margin-right: 20px;
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 .material-info {
