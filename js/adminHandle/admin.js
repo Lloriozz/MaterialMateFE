@@ -191,6 +191,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 console.log(`Status for item ${itemId} updated to ${status} successfully.`);
+                
+                // Nếu status là Approved, cập nhật credit cho người upload
+                if (status.toLowerCase() === 'approved') {
+                    try {
+                        // Lấy thông tin item để biết uploaderID
+                        const itemResponse = await fetch(`http://localhost:8080/mm/items/${itemId}`);
+                        if (!itemResponse.ok) {
+                            throw new Error(`Failed to fetch item details: ${itemResponse.status}`);
+                        }
+                        const itemDetails = await itemResponse.json();
+                        const uploaderId = itemDetails.uploaderID;
+                        console.log('Uploader ID:', uploaderId);
+
+                        // Lấy username từ studentId
+                        const usernameResponse = await fetch(`http://localhost:8080/mm/students/username/${uploaderId}`);
+                        if (!usernameResponse.ok) {
+                            throw new Error(`Failed to fetch username: ${usernameResponse.status}`);
+                        }
+                        const usernameData = await usernameResponse.json();
+                        const username = usernameData.username;
+                        console.log('Student username:', username);
+
+                        // Lấy số credit hiện tại
+                        const currentCreditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`);
+                        if (!currentCreditsResponse.ok) {
+                            throw new Error(`Failed to fetch current credits: ${currentCreditsResponse.status}`);
+                        }
+                        const currentCredits = await currentCreditsResponse.json();
+                        console.log('Current credits:', currentCredits);
+
+                        // Tính toán số credit mới (+1)
+                        const newCreditsValue = parseInt(currentCredits) + 1;
+                        console.log('New credits value:', newCreditsValue);
+
+                        // Cập nhật credit mới
+                        const updateCreditResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ credits: newCreditsValue })
+                        });
+
+                        if (!updateCreditResponse.ok) {
+                            const errorText = await updateCreditResponse.text();
+                            console.error('Failed to update credits. Response:', errorText);
+                            throw new Error(`Failed to update credits: ${updateCreditResponse.status}`);
+                        }
+
+                        const updatedCredits = await updateCreditResponse.json();
+                        console.log('Credits updated successfully:', updatedCredits);
+                        
+                        // Hiển thị thông báo thành công
+                        alert(`Material approved and credits updated for ${username}`);
+                    } catch (error) {
+                        console.error('Error updating credits:', error);
+                        alert('Failed to update credits: ' + error.message);
+                    }
+                }
+
                 // Cập nhật hiển thị trạng thái trên UI
                 const statusSpan = itemElement.querySelector('.status-text');
                 statusSpan.textContent = `Status: ${status}`;
@@ -209,8 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Failed to update status: ${errorData}`);
             }
         } catch (error) {
-            console.error(`Error updating status for item ${itemId}:`, error);
-            alert(`Error updating status: ${error.message}`);
+            console.error('Error updating material status:', error);
+            alert('Failed to update material status. Please try again.');
         }
     }
 
