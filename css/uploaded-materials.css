@@ -438,6 +438,10 @@ nav ul li a {
     color: #e74c3c;
 }
 
+.material-status.rejected {
+    color: #e74c3c;
+}
+
 /* Footer styles */
 footer {
     background-color: #2c5282;
