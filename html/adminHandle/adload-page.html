@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaterialMate - Book List</title>
+    <title>MaterialMate - Upload Material</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../css/adminHandle/admin-blist.css">
+    <link rel="stylesheet" href="../../css/adminHandle/adload-page.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -26,9 +30,9 @@
         <nav>
             <ul>
                 <li><a href="admin-home.html">Home</a></li>
-                <li><a href="admin-blist.html" class="active">Bookshop</a></li>
+                <li><a href="admin-blist.html">Bookshop</a></li>
                 <li><a href="data.html">Data</a></li>
-                <li><a href="adload-page.html">Upload</a></li>
+                <li><a href="adload-page.html" class="active">Upload</a></li>
                 <li><a href="admin.html">Approving</a></li>
             </ul>
         </nav>
@@ -43,51 +47,33 @@
             <div class="dropdown-menu">
 
                 <div>
-                    <a href="login.html" class="dropdown-logout">Log out</a>
+                    <a href="../../html/login.html" class="dropdown-logout">Log out</a>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main>
-        <div class="container">
-            <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="filter-group">
-                    <select id="category">
-                        <option value="">All Categories</option>
-                        <option value="textbook">Textbook</option>
-                        <option value="lecture">Lecture</option>
-                        <option value="exam">Exam</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <select id="sort">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="title">Title</option>
-                    </select>
-                </div>
+    <main class="main-content">
+        <h1 class="upload-title">UPLOAD MATERIAL</h1>
+        
+        <div class="upload-container" id="uploadContainer">
+            <div class="upload-icon">
+                <i class="fas fa-file-upload"></i>
             </div>
-
-            <!-- Book Grid -->
-            <div class="book-grid" id="bookGrid">
-                <!-- Book cards will be dynamically added here -->
-            </div>
-
-            <!-- Loading Spinner -->
-            <div class="loading-spinner" id="loadingSpinner">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
+            <div class="upload-text">Drag your file here</div>
+            <div class="upload-or">or</div>
+            <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+                Browse file
+            </button>
+            <input type="file" id="fileInput" class="file-input" accept=".pdf">
         </div>
     </main>
 
     <!-- Footer -->
     <footer>
         <div class="footer-left">
-            <div class="footer-logo">MaterialMate</div>
+            <div class="footer-logo">Material Mate</div>
             
             <div class="footer-contact">
                 <div class="footer-contact-item">
@@ -125,7 +111,6 @@
             </div>
         </div>
     </footer>
-
-    <script src="../../js/adminHandle/admin-blist.js"></script>
+    <script src="../../js/adminHandle/adload-page.js"></script>
 </body>
 </html>
