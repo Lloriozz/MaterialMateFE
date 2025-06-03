@@ -80,6 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Kiểm tra cache trước
             if (allBooks.length > 0) {
+                // Nếu có cache, hiển thị từ cache ngay lập tức
+                displayBooks(allBooks);
                 return allBooks;
             }
 
@@ -88,10 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Failed to fetch books');
             }
             
-            allBooks = await response.json();
+            const books = await response.json(); // Lấy dữ liệu sách
+            allBooks = books; // Lưu vào cache
+            
+            // Hiển thị sách sau khi fetch thành công
+            displayBooks(allBooks);
+
             return allBooks;
         } catch (error) {
             console.error('Error fetching books:', error);
+            bookGrid.innerHTML = '<div class="error-message">Lỗi khi tải sách. Vui lòng thử lại sau.</div>';
             return [];
         } finally {
             loadingSpinner.style.display = 'none';
@@ -128,8 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Hàm hiển thị sách với virtual scrolling
-    async function displayBooks() {
-        const books = await fetchBooks();
+    async function displayBooks(books) {
+        // Đảm bảo có dữ liệu sách trước khi hiển thị
+        if (!books || books.length === 0) {
+             bookGrid.innerHTML = '<div class="no-books">Không có sách nào được duyệt.</div>';
+             return;
+        }
+
         const filteredBooks = filterAndSortBooks(books);
         
         // Xóa nội dung cũ
@@ -167,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sortFilter.addEventListener('change', debouncedDisplayBooks);
 
     // Hiển thị sách khi trang được tải
-    displayBooks();
+    fetchBooks(); // Gọi hàm fetchBooks để lấy và hiển thị sách
 
     // Xử lý đăng xuất
     const logoutButton = document.querySelector('.dropdown-logout');
@@ -176,6 +189,60 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             sessionStorage.clear();
             window.location.href = 'login.html';
+        });
+    }
+
+    // Thêm chức năng tìm kiếm
+    const searchInput = document.querySelector('.search-bar input');
+    const searchButton = document.querySelector('.search-bar button');
+
+    if (searchInput && searchButton) {
+        // Hàm thực hiện tìm kiếm
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (!searchTerm) {
+                // Nếu ô tìm kiếm trống, hiển thị lại tất cả sách (đã được cache trong allBooks)
+                displayBooks(allBooks); // Sử dụng lại hàm displayBooks nhưng với toàn bộ danh sách
+                return;
+            }
+
+            // Lọc sách dựa trên tiêu đề (có thể thêm các trường khác như category, description nếu cần)
+            const filteredBooks = allBooks.filter(book =>
+                book.title.toLowerCase().includes(searchTerm)
+            );
+
+            // Hiển thị sách đã lọc
+            if (filteredBooks.length === 0) {
+                bookGrid.innerHTML = '<div class="no-books">Không tìm thấy sách nào phù hợp.</div>';
+            } else {
+                displayBooks(filteredBooks);
+            }
+        }
+
+        // Thêm sự kiện click cho nút tìm kiếm
+        searchButton.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn form submit
+            performSearch();
+        });
+
+        // Thêm sự kiện keypress (Enter) cho input tìm kiếm
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Ngăn form submit
+                performSearch();
+            }
+        });
+
+        // Thêm sự kiện input để tìm kiếm khi người dùng gõ (có debounce)
+        const debouncedPerformSearch = debounce(performSearch, 300); // Debounce 300ms
+        searchInput.addEventListener('input', function() {
+             // Nếu ô tìm kiếm trống, hiển thị lại toàn bộ sách ngay lập tức
+             if (this.value.trim() === '') {
+                 displayBooks(allBooks);
+             } else {
+                 // Ngược lại, gọi hàm tìm kiếm có debounce
+                 debouncedPerformSearch();
+             }
         });
     }
 });
