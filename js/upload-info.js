@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Fetch and populate categories
+    fetchCategories();
+
     // Form submission handling
     document.getElementById('uploadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -247,4 +250,40 @@ function updateCreditDisplay() {
           element.textContent = `Credit: ${displayValue}`;
      });
      console.log('Credit display updated to:', `Credit: ${displayValue}`);
+}
+
+// Function to fetch and populate categories
+async function fetchCategories() {
+    try {
+        const response = await fetch('http://localhost:8080/mm/categories/all');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const categories = await response.json();
+        console.log('Categories fetched:', categories);
+
+        // Get the category select element
+        const categorySelect = document.getElementById('category');
+        if (!categorySelect) {
+            console.error('Category select element not found');
+            return;
+        }
+
+        // Clear existing options except the default one
+        categorySelect.innerHTML = '<option value="">Select a category</option>';
+
+        // Add categories to select element
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.categoryName;
+            option.textContent = category.categoryName;
+            categorySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        const categorySelect = document.getElementById('category');
+        if (categorySelect) {
+            categorySelect.innerHTML = '<option value="">Error loading categories</option>';
+        }
+    }
 }
