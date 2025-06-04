@@ -3,16 +3,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const categoryFilter = document.getElementById('category');
     const sortFilter = document.getElementById('sort');
-    let allBooks = []; // Cache toàn bộ danh sách sách
+    let allBooks = [];
 
-    // Kiểm tra đăng nhập
+    // Check if user is logged in
     const username = sessionStorage.getItem('username');
     if (!username) {
         window.location.href = 'login.html';
         return;
     }
 
-    // Cập nhật thông tin user
+    // Update user info in the header
     const userNameElement = document.querySelector('.user-name');
     const userCreditElement = document.querySelector('.user-credit');
     
@@ -20,18 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
         userNameElement.textContent = username;
     }
     
-    // Lấy credit từ localStorage
+    // Get user credit from localStorage
     const userCredit = localStorage.getItem(`${username}_credit`) || '0';
     if (userCreditElement) {
         userCreditElement.textContent = `${userCredit} credits`;
     }
 
-    // Hàm tạo book card
+    // Function to create a book card element
     function createBookCard(book) {
         const card = document.createElement('div');
         card.className = 'book-card';
 
-        // Tạo template string một lần
         console.log('Book title:', book.title);
         console.log('Image cover data:', book.imageCover ? 'Available' : 'Not Available');
 
@@ -52,35 +51,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         card.innerHTML = template;
 
-        // Thêm event listener cho ảnh để xử lý lỗi tải ảnh
+        // Solving image loading issues
         const imgElement = card.querySelector('.book-image img');
         if (imgElement) {
             imgElement.onerror = function() {
                 console.error('Failed to load image for:', book.title, 'Data status:', book.imageCover ? 'Available' : 'Not Available');
-                // Đặt ảnh placeholder
                 this.src = '../assets/book-placeholder.png';
-                // Ngăn console log lỗi 404 liên tục cho placeholder nếu nó cũng không tồn tại
                 this.onerror = null;
             };
         }
-
-        // Thêm sự kiện click cho toàn bộ card (tùy chọn, nếu muốn click vào card cũng chuyển trang)
-        // card.addEventListener('click', () => {
-        //     sessionStorage.setItem('selectedBook', JSON.stringify(book));
-        //     window.location.href = 'book-detail.html?itemId=${book.itemID}';
-        // });
-
         return card;
     }
 
-    // Hàm lấy danh sách sách từ database
+    // Fetch books from the database
     async function fetchBooks() {
         try {
             loadingSpinner.style.display = 'flex';
             
-            // Kiểm tra cache trước
             if (allBooks.length > 0) {
-                // Nếu có cache, hiển thị từ cache ngay lập tức
                 displayBooks(allBooks);
                 return allBooks;
             }
@@ -90,27 +78,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Failed to fetch books');
             }
             
-            const books = await response.json(); // Lấy dữ liệu sách
-            allBooks = books; // Lưu vào cache
-            
-            // Hiển thị sách sau khi fetch thành công
+            const books = await response.json();
+            allBooks = books;
+
             displayBooks(allBooks);
 
             return allBooks;
         } catch (error) {
             console.error('Error fetching books:', error);
-            bookGrid.innerHTML = '<div class="error-message">Lỗi khi tải sách. Vui lòng thử lại sau.</div>';
+            bookGrid.innerHTML = '<div class="error-message">Error loading books. Please try again later.</div>';
             return [];
         } finally {
             loadingSpinner.style.display = 'none';
         }
     }
 
-    // Hàm lọc và sắp xếp sách
+    // Function to filter and sort books
     function filterAndSortBooks(books) {
         let filteredBooks = [...books];
         
-        // Lọc theo category
+        // Filter by category
         const selectedCategory = categoryFilter.value;
         if (selectedCategory) {
             filteredBooks = filteredBooks.filter(book => 
@@ -118,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             );
         }
         
-        // Sắp xếp
+        // Sort books
         const sortBy = sortFilter.value;
         switch (sortBy) {
             case 'newest':
@@ -135,33 +122,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return filteredBooks;
     }
 
-    // Hàm hiển thị sách với virtual scrolling
+    // Function to display books
     async function displayBooks(books) {
-        // Đảm bảo có dữ liệu sách trước khi hiển thị
         if (!books || books.length === 0) {
-             bookGrid.innerHTML = '<div class="no-books">Không có sách nào được duyệt.</div>';
+             bookGrid.innerHTML = '<div class="no-books">No approved books available.</div>';
              return;
         }
 
         const filteredBooks = filterAndSortBooks(books);
-        
-        // Xóa nội dung cũ
+    
         bookGrid.innerHTML = '';
         
-        // Tạo DocumentFragment để tối ưu việc thêm DOM
         const fragment = document.createDocumentFragment();
         
-        // Thêm các book card vào fragment
         filteredBooks.forEach(book => {
             const card = createBookCard(book);
             fragment.appendChild(card);
         });
         
-        // Thêm fragment vào DOM một lần duy nhất
         bookGrid.appendChild(fragment);
     }
 
-    // Thêm debounce cho các filter để tránh gọi API quá nhiều
+    // Debounce function to limit the rate of function execution
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -174,15 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Thêm sự kiện cho các filter với debounce
+    // Add event listeners for category and sort filters with debounce
     const debouncedDisplayBooks = debounce(displayBooks, 300);
     categoryFilter.addEventListener('change', debouncedDisplayBooks);
     sortFilter.addEventListener('change', debouncedDisplayBooks);
 
-    // Hiển thị sách khi trang được tải
-    fetchBooks(); // Gọi hàm fetchBooks để lấy và hiển thị sách
+    fetchBooks();
 
-    // Xử lý đăng xuất
+    // Logout functionality
     const logoutButton = document.querySelector('.dropdown-logout');
     if (logoutButton) {
         logoutButton.addEventListener('click', (e) => {
@@ -192,55 +173,55 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Thêm chức năng tìm kiếm
+    // Search functionality
     const searchInput = document.querySelector('.search-bar input');
     const searchButton = document.querySelector('.search-bar button');
 
     if (searchInput && searchButton) {
-        // Hàm thực hiện tìm kiếm
+        // Function to perform search
         function performSearch() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             if (!searchTerm) {
-                // Nếu ô tìm kiếm trống, hiển thị lại tất cả sách (đã được cache trong allBooks)
-                displayBooks(allBooks); // Sử dụng lại hàm displayBooks nhưng với toàn bộ danh sách
+                // If search field is empty, display all books (cached in allBooks)
+                displayBooks(allBooks);
                 return;
             }
 
-            // Lọc sách dựa trên tiêu đề (có thể thêm các trường khác như category, description nếu cần)
+            // Filter books based on title (can add other fields like category, description if needed)
             const filteredBooks = allBooks.filter(book =>
                 book.title.toLowerCase().includes(searchTerm)
             );
 
-            // Hiển thị sách đã lọc
+            // Display filtered books
             if (filteredBooks.length === 0) {
-                bookGrid.innerHTML = '<div class="no-books">Không tìm thấy sách nào phù hợp.</div>';
+                bookGrid.innerHTML = '<div class="no-books">No matching books found.</div>';
             } else {
                 displayBooks(filteredBooks);
             }
         }
 
-        // Thêm sự kiện click cho nút tìm kiếm
+        // Add click event for search button
         searchButton.addEventListener('click', function(e) {
-            e.preventDefault(); // Ngăn form submit
+            e.preventDefault(); // Prevent form submission
             performSearch();
         });
 
-        // Thêm sự kiện keypress (Enter) cho input tìm kiếm
+        // Add keypress (Enter) event for search input
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Ngăn form submit
+                e.preventDefault(); // Prevent form submission
                 performSearch();
             }
         });
 
-        // Thêm sự kiện input để tìm kiếm khi người dùng gõ (có debounce)
+        // Add input event for search when user types (with debounce)
         const debouncedPerformSearch = debounce(performSearch, 300); // Debounce 300ms
         searchInput.addEventListener('input', function() {
-             // Nếu ô tìm kiếm trống, hiển thị lại toàn bộ sách ngay lập tức
+             // If search field is empty, display all books immediately
              if (this.value.trim() === '') {
                  displayBooks(allBooks);
              } else {
-                 // Ngược lại, gọi hàm tìm kiếm có debounce
+                 // Otherwise, call debounced search function
                  debouncedPerformSearch();
              }
         });

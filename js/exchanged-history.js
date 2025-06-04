@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     console.log('Processing material:', material);
                     
-                    // Kiểm tra và lấy itemID từ material.item
+                    // Check if material has item and itemID
                     if (!material.item || !material.item.itemID) {
                         console.error('No item or itemID found in material:', material);
                         return {

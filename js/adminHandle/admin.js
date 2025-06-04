@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('admin.js loaded');
 
-    // Container để hiển thị danh sách tài liệu
+    // Container to display materials list
     const materialsListContainer = document.querySelector('.materials-list');
 
-    // Hàm fetch tất cả tài liệu
+    // Function to fetch all materials
     async function fetchAllMaterials() {
         console.log('Fetching all materials...');
         try {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const materials = await response.json();
             console.log('Materials fetched:', materials);
 
-            // Kiểm tra và xử lý dữ liệu trước khi hiển thị
+            // Check and process data before displaying
             const validMaterials = materials.filter(material => {
                 if (!material.itemID) {
                     console.warn('Material missing itemID:', material);
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Hiển thị tài liệu
+            // Display materials
             displayMaterials(validMaterials);
 
         } catch (error) {
@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Hàm hiển thị danh sách tài liệu
+    // Function to display materials list
     function displayMaterials(materials) {
-        materialsListContainer.innerHTML = ''; // Xóa nội dung cũ
+        materialsListContainer.innerHTML = ''; // Clear old content
 
         if (!materials || materials.length === 0) {
             materialsListContainer.innerHTML = '<div class="no-materials">No materials found.</div>';
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hàm tạo phần tử HTML cho mỗi tài liệu
+    // Function to create HTML element for each material
     function createMaterialItemElement(material) {
         if (!material || !material.itemID) {
             console.error('Invalid material data or missing itemID:', material);
@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
         item.className = 'material-item';
         item.dataset.itemId = material.itemID;
 
-        // Định dạng ngày
+        // Format date
         const uploadDate = material.uploadDate ? new Date(material.uploadDate) : new Date();
         const formattedDate = `${uploadDate.getDate()} - ${uploadDate.getMonth() + 1} - ${uploadDate.getFullYear()}`;
         
-        // Xác định class và text cho trạng thái duyệt
+        // Determine class and text for approval status
         const status = material.approvingStatus || 'Pending';
         let statusClass = '';
         switch(status.toLowerCase()) {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Xử lý sự kiện cho nút View
+        // Handle View button event
         item.querySelector('.btn-view').addEventListener('click', () => {
             console.log('View clicked for item:', material.itemID);
             if (material.pdfUrl) {
@@ -124,13 +124,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Xử lý sự kiện cho nút Accept
+        // Handle Accept button event
         item.querySelector('.btn-accept').addEventListener('click', () => {
             console.log('Accept clicked for item:', material.itemID);
             updateMaterialStatus(material.itemID, 'Approved', item);
         });
 
-        // Xử lý sự kiện cho nút Reject
+        // Handle Reject button event
         item.querySelector('.btn-delete').addEventListener('click', () => {
             console.log('Reject clicked for item:', material.itemID);
             if (confirm('Are you sure you want to reject this material?')) {
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Xử lý hiển thị hình ảnh
+        // Handle image display
         const placeholderImage = item.querySelector('.placeholder-image');
         if (material.imageUrl) {
             const imgElement = document.createElement('img');
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return item;
     }
 
-    // Hàm gọi API cập nhật trạng thái
+    // Function to call API for status update
     async function updateMaterialStatus(itemId, status, itemElement) {
         if (!itemId) {
             console.error('Item ID is missing');
@@ -192,10 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 console.log(`Status for item ${itemId} updated to ${status} successfully.`);
                 
-                // Nếu status là Approved, cập nhật credit cho người upload
+                // If status is Approved, update credit for uploader
                 if (status.toLowerCase() === 'approved') {
                     try {
-                        // Lấy thông tin item để biết uploaderID
+                        // Get item information to know uploaderID
                         const itemResponse = await fetch(`http://localhost:8080/mm/items/${itemId}`);
                         if (!itemResponse.ok) {
                             throw new Error(`Failed to fetch item details: ${itemResponse.status}`);
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const uploaderId = itemDetails.uploaderID;
                         console.log('Uploader ID:', uploaderId);
 
-                        // Lấy username từ studentId
+                        // Get username from studentId
                         const usernameResponse = await fetch(`http://localhost:8080/mm/students/username/${uploaderId}`);
                         if (!usernameResponse.ok) {
                             throw new Error(`Failed to fetch username: ${usernameResponse.status}`);
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const username = usernameData.username;
                         console.log('Student username:', username);
 
-                        // Lấy số credit hiện tại
+                        // Get current credits
                         const currentCreditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`);
                         if (!currentCreditsResponse.ok) {
                             throw new Error(`Failed to fetch current credits: ${currentCreditsResponse.status}`);
@@ -221,11 +221,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         const currentCredits = await currentCreditsResponse.json();
                         console.log('Current credits:', currentCredits);
 
-                        // Tính toán số credit mới (+1)
+                        // Calculate new credits (+1)
                         const newCreditsValue = parseInt(currentCredits) + 1;
                         console.log('New credits value:', newCreditsValue);
 
-                        // Cập nhật credit mới
+                        // Update new credits
                         const updateCreditResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
                             method: 'PUT',
                             headers: {
@@ -244,21 +244,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         const updatedCredits = await updateCreditResponse.json();
                         console.log('Credits updated successfully:', updatedCredits);
                         
-                        // Xóa thông báo alert
+                        // Remove alert notification
                     } catch (error) {
                         console.error('Error updating credits:', error);
                         alert('Failed to update credits: ' + error.message);
                     }
                 }
 
-                // Cập nhật hiển thị trạng thái trên UI
+                // Update display status on UI
                 const statusSpan = itemElement.querySelector('.status-text');
                 statusSpan.textContent = `Status: ${status}`;
-                // Cập nhật class màu sắc
+                // Update color class
                 statusSpan.classList.remove('status-pending', 'status-approved', 'status-rejected');
                 statusSpan.classList.add(`status-${status.toLowerCase()}`);
                 
-                // Ẩn nút Accept/Reject sau khi duyệt
+                // Hide Accept/Reject buttons after approval
                 if(status.toLowerCase() === 'approved' || status.toLowerCase() === 'rejected'){
                     itemElement.querySelector('.material-actions').style.display = 'none';
                     itemElement.querySelector('.btn-delete').style.display = 'none';
@@ -274,6 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Khởi tạo: Fetch và hiển thị tài liệu khi trang load
+    // Initial fetch of materials
     fetchAllMaterials();
 });

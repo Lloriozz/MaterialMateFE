@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
                 if (!response.ok) {
-                    // Nếu có lỗi, đọc và log response text
+                    // If there's an error, read and log response text
                     const errorText = await response.text();
                     console.error('Server error response text:', errorText);
 
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     throw new Error(errorMessage);
                 } else {
-                    // Nếu upload thành công (status 200-299)
+                    // If upload is successful (status 200-299)
                     console.log('Upload successful, attempting to handle success.');
                     await handleUploadSuccess(response);
                 }
@@ -207,21 +207,21 @@ function goToStorage() {
     window.location.href = 'uploaded-materials.html';
 }
 
-// Sửa lại hàm xử lý upload thành công
+// Modified function to handle successful upload
 async function handleUploadSuccess(response) {
     console.log('handleUploadSuccess called.');
     try {
-        // Tạo bản sao của response để có thể đọc nhiều lần nếu cần
+        // Create a clone of the response to be able to read it multiple times if needed
         const clonedResponse = response.clone();
         const result = await clonedResponse.json();
         console.log('Upload successful (handleUploadSuccess):', result);
 
-        // --- Logic hiển thị thành công (quay lại dùng modal) ---
+        // --- Success display logic (back to using modal) ---
         console.log('Showing success modal...');
         document.getElementById('successModal').style.display = 'flex';
-        // --- End Logic hiển thị thành công ---
+        // --- End Success display logic ---
 
-        // Xóa session storage sau khi xử lý thành công
+        // Clear session storage after successful processing
         sessionStorage.removeItem('uploadedFile');
         sessionStorage.removeItem('fileName');
         sessionStorage.removeItem('coverImage');
@@ -231,13 +231,13 @@ async function handleUploadSuccess(response) {
     }
 }
 
-// Hàm update hiển thị credit trên giao diện
+// Function to update credit display on the interface
 function updateCreditDisplay() {
     const storedCredit = sessionStorage.getItem('userCredits') || localStorage.getItem('userCredits');
      let displayValue = 'N/A';
  
      if (storedCredit !== null && storedCredit !== undefined) {
-          // Cố gắng parse thành số, nếu không được thì giữ nguyên
+          // Try to parse as number, if not possible then keep as is
           const numCredit = parseInt(storedCredit, 10);
           displayValue = isNaN(numCredit) ? storedCredit : numCredit;
      }

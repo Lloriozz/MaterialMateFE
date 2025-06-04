@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = usernameField.value.trim();
         const password = passwordField.value.trim();
 
-        // Kiểm tra tài khoản admin mặc định
+        // Check default admin account
         if (username === 'admin' && password === 'admin') {
             console.log('Admin login successful. Redirecting to admin page...');
-            // Lưu thông tin admin vào storage nếu cần thiết
+            // Save admin information to storage if needed
             sessionStorage.setItem('username', 'admin');
             localStorage.setItem('username', 'admin');
             sessionStorage.setItem('is_admin', 'true');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
             sessionStorage.setItem('currentUserId', userId);
             localStorage.setItem('currentUserId', userId);
 
-            // Lưu username vào sessionStorage và localStorage
+            // Store username in sessionStorage and localStorage
             sessionStorage.setItem('username', username);
             localStorage.setItem('username', username);
 

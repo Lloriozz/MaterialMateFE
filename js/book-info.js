@@ -1,33 +1,28 @@
 // Global variables
 let userCredit = 3; // Start with 3 credits for testing
 let currentModal = null;
-let currentItem = null; // Biến lưu trữ thông tin item hiện tại
-let currentUploader = null; // Biến lưu trữ thông tin uploader
+let currentItem = null;
+let currentUploader = null;
 
 // Initialize when page loads
-async function initBookInfoPage() { // Đổi tên hàm khởi tạo
-    // Lấy itemID từ URL
+async function initBookInfoPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemID = urlParams.get('itemId');
 
     if (!itemID) {
         console.error('Item ID not found in URL.');
-        // Hiển thị thông báo lỗi trên giao diện nếu có phần tử hiển thị lỗi
-        const errorElement = document.getElementById('errorMessage'); // Cần có phần tử này trong HTML
+        const errorElement = document.getElementById('errorMessage');
         if(errorElement) errorElement.textContent = 'Error: Item ID not found.';
         return;
     }
 
-    // Fetch thông tin chi tiết item
+    // Fetch item details
     currentItem = await fetchItemDetail(itemID);
 
     if (currentItem) {
         displayItemDetail(currentItem);
-        // Sau khi tải item thành công, mới khởi tạo modal logic
-        initBookInfoModal(); // Giữ nguyên tên hàm init modal cũ
-    } else {
-         // Item không tồn tại hoặc lỗi khi fetch
-         const errorElement = document.getElementById('errorMessage'); // Cần có phần tử này trong HTML
+        initBookInfoModal();
+         const errorElement = document.getElementById('errorMessage');
          if(errorElement) errorElement.textContent = 'Error: Could not load item details.';
     }
 
@@ -441,7 +436,6 @@ async function performExchange() {
     console.log(`Initiating exchange for Item ${itemID} by Student ${studentId} (User: ${username})`);
 
     try {
-        // Bước 1: Lấy credit hiện tại (để tính credit mới cần PUT)
         console.log(`Fetching current credits for user ${username}...`);
         const currentCreditsResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`);
 
@@ -454,19 +448,14 @@ async function performExchange() {
         const currentCredits = await currentCreditsResponse.json();
         console.log('Current credits fetched:', currentCredits);
 
-        // Tính toán số credit mới
-        const newCreditsValue = (currentCredits || 0) - 1; // Trừ 1 credit
+        const newCreditsValue = (currentCredits || 0) - 1;
         console.log('Calculated new credits value after deduction:', newCreditsValue);
 
         if (newCreditsValue < 0) {
              console.warn('Calculated new credits is negative, but initial check passed. This is unexpected.');
-             // Có thể hiển thị lỗi hoặc dừng lại nếu logic yêu cầu
-             // Tạm thời vẫn thử cập nhật backend
         }
 
-        // Bước 2: Gửi yêu cầu PUT để cập nhật credit trong database (-1)
         console.log(`Putting new credits (${newCreditsValue}) for user ${username}...`);
-        // Sử dụng định dạng body object { credits: value } dựa trên Postman test của bạn
         const updateCreditResponse = await fetch(`http://localhost:8080/mm/students/${username}/credits`, {
             method: 'PUT',
             headers: {
@@ -485,7 +474,6 @@ async function performExchange() {
 
         console.log('Credit updated successfully in backend.');
 
-        // Bước 3: Gửi yêu cầu POST để tạo bản ghi ExchangeInfo
         console.log(`Creating ExchangeInfo for Item ${itemID} and Student ${studentId}...`);
         const createExchangeResponse = await fetch('http://localhost:8080/mm/exchanges', {
             method: 'POST',
@@ -505,22 +493,15 @@ async function performExchange() {
 
         const exchangeInfoResult = await createExchangeResponse.json();
         console.log('ExchangeInfo created successfully:', exchangeInfoResult);
-
-        // --- Cập nhật frontend và hiển thị modal thành công ---
         console.log('Backend calls successful. Updating frontend and showing success modal.');
-        // Cập nhật biến credit global và hiển thị
-        userCredit = newCreditsValue; // Sử dụng giá trị mới đã tính
-        updateCreditDisplay(); // Cập nhật hiển thị
+        userCredit = newCreditsValue;
+        updateCreditDisplay();
 
-        // Hiển thị modal thành công
         showSuccessModal();
-        // --- Kết thúc cập nhật frontend ---
 
     } catch (error) {
         console.error('Error during exchange process:', error);
-        // Hiển thị modal lỗi nếu có bất kỳ bước nào thất bại
-        // Cập nhật thông báo lỗi trong modal nếu cần chi tiết hơn
-        showErrorModal(); // Hiển thị modal lỗi chung
+        showErrorModal();
     }
 }
 
@@ -613,7 +594,7 @@ function addCredit(amount) {
     console.log(`➕ Credits added: ${oldCredit} + ${amount} = ${userCredit}`);
 }
 
-// Hàm lấy credit thực tế của user hiện tại
+// Fetch and set user credit from backend
 async function fetchAndSetUserCredit() {
     let username = sessionStorage.getItem('username') || localStorage.getItem('username');
     if (!username) {
@@ -640,7 +621,7 @@ async function fetchAndSetUserCredit() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    fetchAndSetUserCredit(); // Lấy credit thực tế trước khi initBookInfoPage
+    fetchAndSetUserCredit(); 
     initBookInfoPage();
     
     console.log(`

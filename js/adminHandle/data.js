@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabButtons = document.querySelectorAll(".tab-btn")
     const tableContainers = document.querySelectorAll(".table-container")
   
-    // Hàm fetch dữ liệu sinh viên
+    // Function to fetch student data
     async function fetchStudents() {
         console.log('Fetching student data...');
         try {
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Hàm fetch dữ liệu vật liệu (items)
+    // Function to fetch material (items) data
     async function fetchItems() {
         console.log('Fetching item data...');
         try {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Hàm fetch dữ liệu danh mục (categories)
+    // Function to fetch category data
     async function fetchCategories() {
         console.log('Fetching category data...');
         try {
@@ -58,12 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('Error fetching category data:', error);
             const categoryTableBody = document.querySelector('#category-table tbody');
             if (categoryTableBody) {
-                categoryTableBody.innerHTML = '<tr><td colspan="2">Error loading category data.</td></tr>'; // Cập nhật colspan nếu số cột thay đổi
+                categoryTableBody.innerHTML = '<tr><td colspan="2">Error loading category data.</td></tr>'; // Update colspan if number of columns changes
             }
         }
     }
 
-    // Hàm fetch dữ liệu quản trị viên (admins)
+    // Function to fetch admin data
     async function fetchAdmins() {
         console.log('Fetching admin data...');
         try {
@@ -78,17 +78,17 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('Error fetching admin data:', error);
             const adminTableBody = document.querySelector('#admin-table tbody');
             if (adminTableBody) {
-                adminTableBody.innerHTML = '<tr><td colspan="7">Error loading admin data.</td></tr>'; // Cập nhật colspan
+                adminTableBody.innerHTML = '<tr><td colspan="7">Error loading admin data.</td></tr>'; // Update colspan
             }
         }
     }
 
-    // Hàm hiển thị dữ liệu sinh viên trong bảng
+    // Function to display student data in table
     function displayStudents(students) {
         const studentTableBody = document.querySelector('#student-table tbody');
         if (!studentTableBody) return;
 
-        studentTableBody.innerHTML = ''; // Xóa dữ liệu giả
+        studentTableBody.innerHTML = ''; // Clear fake data
 
         if (!students || students.length === 0) {
             studentTableBody.innerHTML = '<tr><td colspan="10">No student data available.</td></tr>';
@@ -97,14 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         students.forEach(student => {
             const row = document.createElement('tr');
-            // Giả định cấu trúc object student từ API khớp với các cột trong bảng
+            // Assume student object structure from API matches table columns
             row.innerHTML = `
                 <td>${student.studentID || 'N/A'}</td>
                 <td>${student.country || 'N/A'}</td>
                 <td>${student.email || 'N/A'}</td>
                 <td>${student.firstName || 'N/A'}</td>
                 <td>${student.lastName || 'N/A'}</td>
-                <td>********</td> <!-- Không hiển thị mật khẩu thực -->
+                <td>********</td> <!-- Don't display actual password -->
                 <td>${student.phoneNumber || 'N/A'}</td>
                 <td>${student.totalCredit || 0}</td>
                 <td>${student.university || 'N/A'}</td>
@@ -114,12 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Hàm hiển thị dữ liệu vật liệu trong bảng
+    // Function to display material data in table
     function displayItems(items) {
         const itemTableBody = document.querySelector('#item-table tbody');
         if (!itemTableBody) return;
 
-        itemTableBody.innerHTML = ''; // Xóa dữ liệu giả
+        itemTableBody.innerHTML = ''; // Clear fake data
 
         if (!items || items.length === 0) {
             itemTableBody.innerHTML = '<tr><td colspan="10">No item data available.</td></tr>';
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         items.forEach(item => {
             const row = document.createElement('tr');
-            // Giả định cấu trúc object item từ API khớp với các cột trong bảng
+            // Assume item object structure from API matches table columns
             row.innerHTML = `
                 <td>${item.itemID || 'N/A'}</td>
                 <td>${item.approvingStatus || 'Pending'}</td>
@@ -149,27 +149,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Hàm hiển thị dữ liệu quản trị viên trong bảng
+    // Function to display admin data in table
     function displayAdmins(admins) {
         const adminTableBody = document.querySelector('#admin-table tbody');
         if (!adminTableBody) return;
 
-        adminTableBody.innerHTML = ''; // Xóa dữ liệu cũ
+        adminTableBody.innerHTML = ''; // Clear old data
 
         if (!admins || admins.length === 0) {
-            adminTableBody.innerHTML = '<tr><td colspan="7">No admin data available.</td></tr>'; // Cập nhật colspan
+            adminTableBody.innerHTML = '<tr><td colspan="7">No admin data available.</td></tr>'; // Update colspan
             return;
         }
 
         admins.forEach(admin => {
             const row = document.createElement('tr');
-            // Giả định cấu trúc object admin từ API khớp với các cột trong bảng
+            // Assume admin object structure from API matches table columns
             row.innerHTML = `
                 <td>${admin.adminID || 'N/A'}</td>
                 <td>${admin.email || 'N/A'}</td>
                 <td>${admin.firstName || 'N/A'}</td>
                 <td>${admin.lastName || 'N/A'}</td>
-                <td>********</td> <!-- Không hiển thị mật khẩu thực -->
+                <td>********</td> <!-- Don't display actual password -->
                 <td>${admin.phoneNumber || 'N/A'}</td>
                 <td>${admin.username || 'N/A'}</td>
             `;
@@ -177,21 +177,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Hàm hiển thị dữ liệu thông tin giao dịch trong bảng
+    // Function to display exchange info data in table
     function displayExchangeInfos(exchangeInfos) {
         const exchangeInfoTableBody = document.querySelector('#exchange-info-table tbody');
         if (!exchangeInfoTableBody) return;
 
-        exchangeInfoTableBody.innerHTML = ''; // Xóa dữ liệu cũ
+        exchangeInfoTableBody.innerHTML = ''; // Clear old data
 
         if (!exchangeInfos || exchangeInfos.length === 0) {
-            exchangeInfoTableBody.innerHTML = '<tr><td colspan="5">No exchange info data available.</td></tr>'; // Cập nhật colspan
+            exchangeInfoTableBody.innerHTML = '<tr><td colspan="5">No exchange info data available.</td></tr>'; // Update colspan
             return;
         }
 
         exchangeInfos.forEach(exchangeInfo => {
             const row = document.createElement('tr');
-            // Giả định cấu trúc object exchangeInfo từ API khớp với các cột trong bảng
+            // Assume exchangeInfo object structure from API matches table columns
             row.innerHTML = `
                 <td>${exchangeInfo.exchangeID || 'N/A'}</td>
                 <td>${exchangeInfo.studentId || 'N/A'}</td>
@@ -203,21 +203,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Hàm hiển thị dữ liệu danh mục trong bảng
+    // Function to display category data in table
     function displayCategories(categories) {
         const categoryTableBody = document.querySelector('#category-table tbody');
         if (!categoryTableBody) return;
 
-        categoryTableBody.innerHTML = ''; // Xóa dữ liệu cũ
+        categoryTableBody.innerHTML = ''; // Clear old data
 
         if (!categories || categories.length === 0) {
-            categoryTableBody.innerHTML = '<tr><td colspan="2">No category data available.</td></tr>'; // Cập nhật colspan nếu số cột thay đổi
+            categoryTableBody.innerHTML = '<tr><td colspan="2">No category data available.</td></tr>'; // Update colspan if number of columns changes
             return;
         }
 
         categories.forEach(category => {
             const row = document.createElement('tr');
-            // Giả định cấu trúc object category từ API khớp với các cột trong bảng
+            // Assume category object structure from API matches table columns
             row.innerHTML = `
                 <td>${category.categoryID || 'N/A'}</td>
                 <td>${category.categoryName || 'N/A'}</td>
@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
              } else if (tableName === 'admin') {
                  fetchAdmins()
              } else if (tableName === 'category') {
-                  fetchCategories()
+                 fetchCategories()
              } else if (tableName === 'exchange-info') {
                   fetchExchangeInfos()
              }
@@ -258,26 +258,21 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     })
   
-    // Initial load: Activate the first tab and fetch data for it
-    const initialTab = document.querySelector('.tab-btn.active')
-    if (initialTab) {
-        const initialTableId = initialTab.getAttribute('data-table') + '-table'
-        const initialTableContainer = document.getElementById(initialTableId)
-        if (initialTableContainer) {
-             initialTableContainer.classList.add('active')
-             const initialTableName = initialTab.getAttribute('data-table')
-             if (initialTableName === 'student') {
-                 fetchStudents()
-             } else if (initialTableName === 'item') {
-                  fetchItems()
-             } else if (initialTableName === 'admin') {
-                  fetchAdmins()
-             } else if (initialTableName === 'category') {
-                  fetchCategories()
-             } else if (initialTableName === 'exchange-info') {
-                  fetchExchangeInfos()
-             }
-        }
+    // Initial data fetch for the active tab
+    const activeTab = document.querySelector('.tab-btn.active')
+    if (activeTab) {
+      const tableName = activeTab.getAttribute("data-table")
+      if (tableName === 'student') {
+        fetchStudents()
+      } else if (tableName === 'item') {
+        fetchItems()
+      } else if (tableName === 'admin') {
+        fetchAdmins()
+      } else if (tableName === 'category') {
+        fetchCategories()
+      } else if (tableName === 'exchange-info') {
+        fetchExchangeInfos()
+      }
     }
   
     // Table search functionality

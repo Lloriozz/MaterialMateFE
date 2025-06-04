@@ -312,7 +312,6 @@ document.addEventListener('DOMContentLoaded', function() {
             img.style.objectFit = 'cover'; // Cover the area without distortion
             thumbnailDiv.appendChild(img);
         } else if (thumbnailDiv) {
-            // Optional: Add a placeholder image or text if no cover is available
             thumbnailDiv.innerHTML = '<div class="placeholder-image"></div>'; // Using the placeholder div from HTML
         }
         

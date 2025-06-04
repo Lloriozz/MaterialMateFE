@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Thêm hiệu ứng hover cho các feature cards
+    // Add hover effect for feature cards
     const features = document.querySelectorAll('.feature');
     features.forEach(feature => {
         feature.addEventListener('mouseenter', function() {
@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Thêm hiệu ứng click cho nút CTA
+    // Add click effect for CTA button
     const ctaButton = document.querySelector('.cta-button');
     if (ctaButton) {
         ctaButton.addEventListener('click', function(e) {
-            // Thêm hiệu ứng ripple khi click
+            // Add ripple effect when clicked
             const ripple = document.createElement('span');
             ripple.classList.add('ripple');
             this.appendChild(ripple);

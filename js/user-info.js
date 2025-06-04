@@ -1,4 +1,4 @@
-// Hàm cập nhật thông tin người dùng
+// Function to update user information
 async function updateUserInfo() {
     const username = sessionStorage.getItem('username');
     console.log('Attempting to get username from sessionStorage:', username);
@@ -10,7 +10,7 @@ async function updateUserInfo() {
 
     console.log('Username found:', username, 'Updating display and fetching credits.');
 
-    // Cập nhật username trong giao diện
+    // Update username in the interface
     const userNameElements = document.querySelectorAll('.user-name');
     console.log('Found', userNameElements.length, '.user-name elements.');
     userNameElements.forEach(element => {
@@ -18,7 +18,7 @@ async function updateUserInfo() {
         console.log('Updated .user-name element:', element);
     });
 
-    // Lấy và cập nhật credits
+    // Get and update credits
     try {
         console.log('Fetching credits from:', `http://localhost:8080/mm/students/${username}/credits`);
         const response = await fetch(`http://localhost:8080/mm/students/${username}/credits`);
@@ -31,7 +31,7 @@ async function updateUserInfo() {
         const credits = await response.json();
         console.log('Credits fetched:', credits);
 
-        // Cập nhật credits trong giao diện
+        // Update credits in the interface
         const creditElements = document.querySelectorAll('.user-credit');
         console.log('Found', creditElements.length, '.user-credit elements to update.');
         creditElements.forEach(element => {
@@ -40,7 +40,7 @@ async function updateUserInfo() {
             console.log('Updated .user-credit element:', element, 'with value:', element.textContent);
         });
 
-        // Lưu credits vào sessionStorage
+        // Save credits to sessionStorage
         sessionStorage.setItem('userCredits', credits);
 
     } catch (error) {
@@ -52,28 +52,28 @@ async function updateUserInfo() {
     }
 }
 
-// Hàm kiểm tra trạng thái đăng nhập
+// Function to check login status
 function checkLoginStatus() {
     const username = sessionStorage.getItem('username');
     if (!username) {
-        // Nếu chưa đăng nhập, chuyển hướng về trang login
+        // If not logged in, redirect to login page
         window.location.href = '/html/login.html';
         return false;
     }
     return true;
 }
 
-// Hàm đăng xuất
+// Logout function
 function logout() {
-    // Xóa thông tin người dùng khỏi sessionStorage
+    // Remove user information from sessionStorage
     sessionStorage.removeItem('username');
     sessionStorage.removeItem('userCredits');
     
-    // Chuyển hướng về trang login
+    // Redirect to login page
     window.location.href = '../../html/login.html';
 }
 
-// Khởi tạo khi trang được tải
+// Initialize when page is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('user-info.js loaded after DOM content loaded');
     if (checkLoginStatus()) {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Khởi tạo khi window được tải (cho trường hợp script được load sau khi DOM đã sẵn sàng)
+// Initialize when window is loaded (for cases where script is loaded after DOM is ready)
 window.addEventListener('load', function() {
     console.log('user-info.js loaded after window load');
     if (checkLoginStatus()) {
@@ -89,7 +89,7 @@ window.addEventListener('load', function() {
     }
 });
 
-// Export các hàm để có thể sử dụng từ các file khác
+// Export functions to be used from other files
 window.userInfo = {
     updateUserInfo,
     checkLoginStatus,
