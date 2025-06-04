@@ -244,8 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const updatedCredits = await updateCreditResponse.json();
                         console.log('Credits updated successfully:', updatedCredits);
                         
-                        // Hiển thị thông báo thành công
-                        alert(`Material approved and credits updated for ${username}`);
+                        // Xóa thông báo alert
                     } catch (error) {
                         console.error('Error updating credits:', error);
                         alert('Failed to update credits: ' + error.message);
